@@ -1,0 +1,4 @@
+{
+    "dependencies": ["test_plugin",
+                     "does_nothing"]
+}
