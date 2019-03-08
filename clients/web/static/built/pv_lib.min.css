@@ -1,0 +1,409 @@
+/* 首页欢迎图像 */
+.pv-frontpage-welcome-image {
+  max-width: 60px;
+  max-height: 60px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+/*  */
+.pv-collection-image {
+  max-width: 30px;
+  max-height: 30px;
+/*   position: absolute; */
+  /* left: 50%;
+  top: 50%; */
+}
+
+/* 上传按钮 */
+.pv-btn-success {
+  color: #000;
+  background-color: #6d9eeb;
+  border-color: #6d9eeb;
+}
+.pv-btn-success:focus,
+.pv-btn-success.focus {
+  color: #000;
+  background-color: #6d9eeb;
+  border-color: #000;
+}
+.pv-btn-success:hover {
+  color: #000;
+  background-color: #6d9eeb;
+  border-color: #000;
+}
+.pv-btn-success:active,
+.pv-btn-success.active,
+.open > .dropdown-toggle.pv-btn-success {
+  color: #000;
+  background-color: #6d9eeb;
+  border-color: #6d9eeb;
+}
+.pv-btn-success:active:hover,
+.pv-btn-success.active:hover,
+.open > .dropdown-toggle.pv-btn-success:hover,
+.pv-btn-success:active:focus,
+.pv-btn-success.active:focus,
+.open > .dropdown-toggle.pv-btn-success:focus,
+.pv-btn-success:active.focus,
+.pv-btn-success.active.focus,
+.open > .dropdown-toggle.pv-btn-success.focus {
+  color: #000;
+  background-color: #6d9eeb;
+  border-color: #000;
+}
+.pv-btn-success:active,
+.pv-btn-success.active,
+.open > .dropdown-toggle.pv-btn-success {
+  background-image: none;
+}
+.pv-btn-success.disabled:hover,
+.pv-btn-success[disabled]:hover,
+fieldset[disabled] .pv-btn-success:hover,
+.pv-btn-success.disabled:focus,
+.pv-btn-success[disabled]:focus,
+fieldset[disabled] .pv-btn-success:focus,
+.pv-btn-success.disabled.focus,
+.pv-btn-success[disabled].focus,
+fieldset[disabled] .pv-btn-success.focus {
+  background-color: #6d9eeb;
+  border-color: #000;
+}
+.pv-btn-success .badge {
+  color: #000;
+  background-color: #6d9eeb;
+}
+
+
+/* 访问控制按钮 */
+.pv-btn-warning {
+  color: #000000;
+  background-color: #6d9eeb;
+}
+.pv-btn-warning:focus,
+.pv-btn-warning.focus {
+  color: #000000;
+  background-color: #6d9eeb;
+  border-color: #000000;
+}
+.pv-btn-warning:hover {
+  color: #000000;
+  background-color: #6d9eeb;
+  border-color: #000000;
+}
+.pv-btn-warning:active,
+.pv-btn-warning.active,
+.open > .dropdown-toggle.pv-btn-warning {
+  color: #000000;
+  background-color: #6d9eeb;
+}
+.pv-btn-warning:active:hover,
+.pv-btn-warning.active:hover,
+.open > .dropdown-toggle.pv-btn-warning:hover,
+.pv-btn-warning:active:focus,
+.pv-btn-warning.active:focus,
+.open > .dropdown-toggle.pv-btn-warning:focus,
+.pv-btn-warning:active.focus,
+.pv-btn-warning.active.focus,
+.open > .dropdown-toggle.pv-btn-warning.focus {
+  color: #000000;
+  background-color: #9900ff;
+  border-color: #000000;
+}
+.pv-btn-warning:active,
+.pv-btn-warning.active,
+.open > .dropdown-toggle.pv-btn-warning {
+  background-image: none;
+}
+.pv-btn-warning.disabled:hover,
+.pv-btn-warning[disabled]:hover,
+fieldset[disabled] .pv-btn-warning:hover,
+.pv-btn-warning.disabled:focus,
+.pv-btn-warning[disabled]:focus,
+fieldset[disabled] .pv-btn-warning:focus,
+.pv-btn-warning.disabled.focus,
+.pv-btn-warning[disabled].focus,
+fieldset[disabled] .pv-btn-warning.focus {
+  background-color: #9900ff;
+  border-color: #000000;
+}
+.pv-btn-warning .badge {
+  color: #9900ff;
+  background-color: #000000;
+}
+
+/* 图像列表 */
+.g-hierarchy-widget .g-folder-list >.pv-g-item-list-entry,
+.g-hierarchy-widget .g-item-list >.pv-g-item-list-entry,
+.g-hierarchy-widget .g-file-list >.pv-g-item-list-entry {
+  font-size: 15px;
+}
+
+.g-hierarchy-widget .g-folder-list >.pv-g-item-list-entry:hover,
+.g-hierarchy-widget .g-item-list >.pv-g-item-list-entry:hover,
+.g-hierarchy-widget .g-file-list >.pv-g-item-list-entry:hover {
+  background-color: #d5a6bd;
+  border-color: #000000;
+}
+
+.g-hierarchy-widget .g-folder-list >.pv-g-item-list-entry[public="false"],
+.g-hierarchy-widget .g-item-list >.pv-g-item-list-entry[public="false"],
+.g-hierarchy-widget .g-file-list >.pv-g-item-list-entry[public="false"] {
+  background-color: #fff;
+  border-color: #000000;
+}
+
+.g-hierarchy-widget .g-folder-list >.pv-g-item-list-entry[public="false"]:hover,
+.g-hierarchy-widget .g-item-list >.pv-g-item-list-entry[public="false"]:hover,
+.g-hierarchy-widget .g-file-list >.pv-g-item-list-entry[public="false"]:hover {
+  background-color: #d5a6bd;
+  border-color: #000000;
+}
+
+
+/* 请选择文件 */
+.pv-g-drop-zone {
+  width: 30%;
+  text-align: center;
+  line-height: 60px;
+  height: 60px;
+  -webkit-box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  background-color: #6d9eeb;
+  border: 1px solid #4a8;
+  padding: 0;
+}
+.pv-g-drop-zone:hover {
+  background-color: #6d9eeb;
+  border-color: #000000;
+  background: -webkit-linear-gradient(top, #6d9eeb 50%, #6d9eeb 100%);
+  background: -moz-linear-gradient(top, #6d9eeb 50%, #6d9eeb 100%);
+  background: -o-linear-gradient(top, #6d9eeb 50%, #6d9eeb 100%);
+  background: -ms-linear-gradient(top, #6d9eeb 50%, #6d9eeb 100%);
+  background: linear-gradient(to bottom, #6d9eeb 50%, #6d9eeb 100%);
+}
+.pv-g-drop-zone:active {
+  background: #6d9eeb;
+  border-color: #000000;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0,0,0,0.125);
+  box-shadow: inset 0 3px 5px rgba(0,0,0,0.125);
+}
+.pv-g-drop-zone.g-dropzone-show {
+  background: #fff;
+  border: 2px dashed #bbb;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* ********** */
+/* 开始上传按钮 */
+/* ********** */
+.pv-btn-primary {
+  color: #000;
+  background-color: #6d9eeb;
+  border-color: #fff;
+}
+.pv-btn-primary:focus,
+.pv-btn-primary.focus {
+  color: #000;
+  background-color: #6d9eeb;
+  border-color: #000;
+}
+.pv-btn-primary:hover {
+  color: #000;
+  background-color: #6d9eeb;
+  border-color: #000;
+}
+.pv-btn-primary:active,
+.pv-btn-primary.active,
+.open > .dropdown-toggle.pv-btn-primary {
+  color: #000;
+  background-color: #6d9eeb;
+  border-color: #000;
+}
+.pv-btn-primary:active:hover,
+.pv-btn-primary.active:hover,
+.open > .dropdown-toggle.pv-btn-primary:hover,
+.pv-btn-primary:active:focus,
+.pv-btn-primary.active:focus,
+.open > .dropdown-toggle.pv-btn-primary:focus,
+.pv-btn-primary:active.focus,
+.pv-btn-primary.active.focus,
+.open > .dropdown-toggle.pv-btn-primary.focus {
+  color: #000;
+  background-color: #6d9eeb;
+  border-color: #000;
+}
+.pv-btn-primary:active,
+.pv-btn-primary.active,
+.open > .dropdown-toggle.pv-btn-primary {
+  background-image: none;
+}
+.pv-btn-primary.disabled:hover,
+.pv-btn-primary[disabled]:hover,
+fieldset[disabled] .pv-btn-primary:hover,
+.pv-btn-primary.disabled:focus,
+.pv-btn-primary[disabled]:focus,
+fieldset[disabled] .pv-btn-primary:focus,
+.pv-btn-primary.disabled.focus,
+.pv-btn-primary[disabled].focus,
+fieldset[disabled] .pv-btn-primary.focus {
+  background-color: #6d9eeb;
+  border-color: #000;
+}
+.pv-btn-primary .badge {
+  color: #6d9eeb;
+  background-color: #000;
+}
+
+.pv-dropdown-header {
+  display: block;
+  padding: 3px 20px;
+  font-size: 12px;
+  line-height: 1.42857143;
+  color: #a61c00;
+  white-space: nowrap;
+}
+
+ul.dropdown-menu >li.pv-dropdown-header {
+  padding: 3px 20px 3px 8px;
+  margin-bottom: 3px;
+  background-color: #b4a7d6;
+  font-weight: bold;
+  color: #000;
+}
+
+
+/* Navi List */
+.pv-g-nav-link {
+  display: block;
+  line-height: 2.2;
+  font-size: 17px;
+  color: #4a4a4a;
+  padding-left: 12px;
+}
+.pv-g-nav-link i {
+  color: #888;
+  margin: 3px;
+}
+ul.g-global-nav >li:hover:not(.g-active) .pv-g-nav-link {
+  position: relative;
+  color: #222;
+}
+ul.g-global-nav >li.g-active .pv-g-nav-link {
+  color: #000;
+}
+
+/* ******* */
+/* Buttons */
+/* ******* */
+/* @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,700); */
+
+/* General Buttons */
+button {
+  width: 130px;
+  height: 40px;
+  background: linear-gradient(to bottom, #4eb5e5 0%,#389ed5 100%); /* W3C */
+  border: none;
+  border-radius: 5px;
+  position: relative;
+  border-bottom: 4px solid #2b8bc6;
+  color: #fbfbfb;
+  font-weight: 600;
+  font-family: 'Open Sans', sans-serif;
+  text-shadow: 1px 1px 1px rgba(0,0,0,.4);
+  font-size: 15px;
+  text-align: left;
+  text-indent: 5px;
+  box-shadow: 0px 3px 0px 0px rgba(0,0,0,.2);
+  cursor: pointer;
+
+/* Just for presentation */
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+button:active {
+  box-shadow: 0px 2px 0px 0px rgba(0,0,0,.2);
+  top: 1px;
+}
+
+button:after {
+  content: "";
+  width: 0;
+  height: 0;
+  display: block;
+  border-top: 20px solid #187dbc;
+  border-bottom: 20px solid #187dbc;
+  border-left: 16px solid transparent;
+  border-right: 20px solid #187dbc;
+  position: absolute;
+  opacity: 0.6;
+  right: 0;
+  top: 0;
+  border-radius: 0 5px 5px 0;
+}
+
+/* Button pointing left */
+
+button.back {
+  text-align: right;
+  padding-right: 12px;
+  box-sizing: border-box;
+}
+button.back:after {
+  content: "";
+  width: 0;
+  height: 0;
+  display: block;
+  border-top: 20px solid #187dbc;
+  border-bottom: 20px solid #187dbc;
+  border-right: 16px solid transparent;
+  border-left: 20px solid #187dbc;
+  position: absolute;
+  opacity: 0.6;
+  left: 0;
+  top: 0;
+  border-radius: 5px 0 0 5px;
+}
+
+/* Single buttons */
+
+button.site {
+  width: 40px;
+  text-align: center;
+  text-indent: 0;
+}
+button.site:after{
+  display: none;
+}
+
+
+
+
+
+/* Presentation stuff */
+.holder {
+  width: 400px;
+  background: #efefef;
+  padding: 30px 10px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  margin-top: 20px;
+  text-align: center;
+}
+
+h1 {
+  font: 400 16px 'Open Sans';
+  text-transform: uppercase;
+  color: #999;
+  text-shadow: 1px 1px 1px #fff;
+  margin-bottom: 30px;
+}
