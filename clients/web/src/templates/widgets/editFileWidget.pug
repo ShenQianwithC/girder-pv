@@ -3,19 +3,20 @@
     form#g-file-edit-form.modal-form(role="form")
       .modal-header
         button.close(data-dismiss="modal", aria-hidden="true", type="button") &times;
-        h4.modal-title Edit file
+        h4.modal-title 编辑文件
       .modal-body
         .form-group
-          label.control-label(for="g-name") Name
+          label.control-label(for="g-name") 名称
           input#g-name.input-sm.form-control(
             type="text", placeholder="Enter file name", value=file.name())
         .form-group
-          label.control-label(for="g-mimetype") MIME type
+          label.control-label(for="g-mimetype") MIME 类型
           input#g-mimetype.input-sm.form-control(
             type="text", placeholder="Enter MIME type", value=file.get('mimeType'))
         .g-validation-failed-message
       .modal-footer
-        a.btn.btn-small.btn-default(data-dismiss="modal") Cancel
+        a.btn.btn-small.btn-default(data-dismiss="modal") 取消
+          i.icon-cancel-circled
         button.g-save-file.btn.btn-small.btn-primary(type="submit")
-          i.icon-edit
-          | Save
+          i.icon-floppy
+          | 保存

@@ -20,7 +20,7 @@
 import datetime
 import six
 from bson.objectid import ObjectId
-
+import traceback
 from girder import events, logger
 from girder.api import rest
 from girder.constants import SettingKey
@@ -28,6 +28,7 @@ from .model_base import Model
 from girder.exceptions import GirderException, ValidationException
 from girder.utility import RequestBodyStream
 from girder.utility.progress import noProgress
+# from libtiff.optparse_gui import subprocess
 
 
 class Upload(Model):
@@ -37,10 +38,14 @@ class Upload(Model):
     arbitrary size. The chunks must be uploaded in order.
     """
     def initialize(self):
+        print('(#####)girder/girder/model/upload.py:initialize')
         self.name = 'upload'
         self.ensureIndex('sha512')
 
     def _getChunkSize(self, minSize=32 * 1024**2):
+
+        print('(#####)girder/girder/model/upload.py:finalizeUpload:_getChunkSize=')
+
         """
         Return a chunk size to use in file uploads.  This is the maximum of
         the setting for minimum upload chunk size and the specified size.
@@ -55,6 +60,11 @@ class Upload(Model):
     def uploadFromFile(self, obj, size, name, parentType=None, parent=None,
                        user=None, mimeType=None, reference=None,
                        assetstore=None, attachParent=False):
+#         traceback.print_stack()
+
+        print('(#####)girder/girder/model/upload.py:uploadFromFile:size='+str(size))
+        print('(#####)girder/girder/model/upload.py:uploadFromFile:name='+str(name))
+
         """
         This method wraps the entire upload process into a single function to
         facilitate "internal" uploads from a file-like object. Example:
@@ -97,8 +107,10 @@ class Upload(Model):
             user=user, name=name, parentType=parentType, parent=parent,
             size=size, mimeType=mimeType, reference=reference,
             assetstore=assetstore, attachParent=attachParent)
+        print('(#####)girder/girder/model/upload.py:uploadFromFile:upload='+str(upload))
         # The greater of 32 MB or the the upload minimum chunk size.
         chunkSize = self._getChunkSize()
+        print('(#####)girder/girder/model/upload.py:uploadFromFile:chunkSize='+str(chunkSize))
 
         while True:
             data = obj.read(chunkSize)
@@ -110,16 +122,23 @@ class Upload(Model):
         return upload
 
     def validate(self, doc):
+        print('(#####)girder/girder/model/upload.py:validate:doc[size]='+str(doc['size']))
+        print('(#####)girder/girder/model/upload.py:validate:doc[received]='+str(doc['received']))
+
         if doc['size'] < 0:
             raise ValidationException('File size must not be negative.')
         if doc['received'] > doc['size']:
-            raise ValidationException('Received too many bytes.')
+            raise ValidationException('Received too many bytes 1.')
 
         doc['updated'] = datetime.datetime.utcnow()
 
+        print('(#####)girder/girder/model/upload.py:validate:doc='+str(doc))
         return doc
 
     def handleChunk(self, upload, chunk, filter=False, user=None):
+#         traceback.print_stack()
+        print('(#####)girder/girder/model/upload.py:handleChunk:upload='+str(upload))
+
         """
         When a chunk is uploaded, this should be called to process the chunk.
         If this is the final chunk of the upload, this method will finalize
@@ -146,12 +165,15 @@ class Upload(Model):
 
         assetstore = Assetstore().load(upload['assetstoreId'])
         adapter = assetstore_utilities.getAssetstoreAdapter(assetstore)
-
+        print('(#####)girder/girder/model/upload.py:handleChunk:assetstore='+str(assetstore))
+        print('(#####)girder/girder/model/upload.py:handleChunk:adapter='+str(adapter))
         upload = adapter.uploadChunk(upload, chunk)
         if '_id' in upload or upload['received'] != upload['size']:
             upload = self.save(upload)
 
         # If upload is finished, we finalize it
+        print('(#####)girder/girder/model/upload.py:handleChunk:upload[received]='+str(upload['received']))
+        print('(#####)girder/girder/model/upload.py:handleChunk:upload[size]='+str(upload['size']))
         if upload['received'] == upload['size']:
             file = self.finalizeUpload(upload, assetstore)
             if filter:
@@ -166,6 +188,8 @@ class Upload(Model):
         Requests the offset that should be used to resume uploading. This
         makes the request from the assetstore adapter.
         """
+        print('(#####)girder/girder/model/upload.py:requestOffset:requestOffset')
+
         from .assetstore import Assetstore
         from girder.utility import assetstore_utilities
 
@@ -192,6 +216,7 @@ class Upload(Model):
         events.trigger('model.upload.finalize', upload)
         if assetstore is None:
             assetstore = Assetstore().load(upload['assetstoreId'])
+            logger.info('(#####)girder/girder/model/upload.py:finalizeUpload:assetstore='+str(assetstore))
 
         if 'fileId' in upload:  # Updating an existing file's contents
             file = File().load(upload['fileId'], force=True)
@@ -211,6 +236,7 @@ class Upload(Model):
             # If the file was previously imported, it is no longer.
             if file.get('imported'):
                 file['imported'] = False
+            logger.info('(#####)girder/girder/model/upload.py:finalizeUpload:Updating+'+str(file))
 
         else:  # Creating a new file record
             if upload.get('attachParent'):
@@ -220,10 +246,56 @@ class Upload(Model):
                 item = Item().createItem(
                     name=upload['name'], creator={'_id': upload['userId']},
                     folder={'_id': upload['parentId']})
+
+                #####################################################
+                ################# Insert annotation start ###########
+                #####################################################
+                import pymongo
+                mongoClient = pymongo.MongoClient('mongodb://localhost:27017/')
+                db_girder = mongoClient['girder']
+                coll_annotation = db_girder["annotation"]
+
+                now = datetime.datetime.utcnow()
+                annotation_id = ObjectId()
+                annotation={
+                            "_id" : annotation_id,
+                            ### "itemId" need to be update
+                            "itemId" : item['_id'],
+                            #################################################
+                            # "updated" : ISODate("2018-12-13T08:59:09.307Z"),
+                            "groups" : [],
+                            # "created" : ISODate("2018-12-13T08:56:23.083Z"),
+                            "_version" : 1,
+                            "annotation" : {
+                                "name" : '标注1'
+                            },
+                            "access" : {
+                                "users" : [
+                                    {
+                                        "flags" : [],
+                                        "id" : ObjectId("5b9b7d25d4a48a28c5f8ef84"),
+                                        "level" : 2
+                                    }
+                                ],
+                                "groups" : []
+                            },
+                            'created': now,
+                            'updated': now,
+                            "creatorId" : ObjectId(upload['userId']),
+                            "public" : False,
+                            "updatedId" : ObjectId(upload['userId'])
+                        }
+                result = coll_annotation.insert_one(annotation)
+
+                #####################################################
+                ################# Insert annotation END ###########
+                #####################################################
+
             elif upload['parentType'] == 'item':
                 item = Item().load(id=upload['parentId'], force=True)
             else:
                 item = None
+            logger.info('(#####)girder/girder/model/upload.py:finalizeUpload:item+'+str(item))
 
             file = File().createFile(
                 item=item, name=upload['name'], size=upload['size'],
@@ -233,6 +305,8 @@ class Upload(Model):
                 if upload['parentType'] and upload['parentId']:
                     file['attachedToType'] = upload['parentType']
                     file['attachedToId'] = upload['parentId']
+            logger.info('(#####)girder/girder/model/upload.py:finalizeUpload:Creating='+str(file))
+
 
         adapter = assetstore_utilities.getAssetstoreAdapter(assetstore)
         file = adapter.finalizeUpload(upload, file)
@@ -257,10 +331,15 @@ class Upload(Model):
         if 'reference' in upload:
             eventParams['reference'] = upload['reference']
         events.daemon.trigger('data.process', eventParams)
+        logger.info('(#####)girder/girder/model/upload.py:finalizeUpload:file3='+str(file))
+
+
 
         return file
 
     def getTargetAssetstore(self, modelType, resource, assetstore=None):
+
+
         """
         Get the assetstore for a particular target resource, i.e. where new
         data within the resource should be stored. In Girder core, this is
@@ -280,13 +359,18 @@ class Upload(Model):
 
         if event.responses:
             assetstore = event.responses[-1]
+            print('(#####)girder/girder/model/upload.py:getTargetAssetstore:assetstore1='+str(assetstore))
         elif not assetstore:
             assetstore = Assetstore().getCurrent()
+            print('(#####)girder/girder/model/upload.py:getTargetAssetstore:assetstore2='+str(assetstore))
 
         return assetstore
 
     def createUploadToFile(self, file, user, size, reference=None,
                            assetstore=None):
+
+        print('(#####)girder/girder/model/upload.py:createUploadToFile')
+
         """
         Creates a new upload record into a file that already exists. This
         should be used when updating the contents of a file. Deletes any
@@ -328,6 +412,11 @@ class Upload(Model):
     def createUpload(self, user, name, parentType, parent, size, mimeType=None,
                      reference=None, assetstore=None, attachParent=False,
                      save=True):
+        print('(#####)girder/girder/model/upload.py:createUpload:user='+str(user))
+        print('(#####)girder/girder/model/upload.py:createUpload:name='+name)
+        print('(#####)girder/girder/model/upload.py:createUpload:parentType='+parentType)
+        print('(#####)girder/girder/model/upload.py:createUpload:parent='+str(parent))
+        print('(#####)girder/girder/model/upload.py:createUpload:now='+str(datetime.datetime.utcnow()))
         """
         Creates a new upload record, and creates its temporary file
         that the chunks will be written into. Chunks should then be sent
@@ -366,6 +455,7 @@ class Upload(Model):
         assetstore = self.getTargetAssetstore(parentType, parent, assetstore)
         adapter = assetstore_utilities.getAssetstoreAdapter(assetstore)
         now = datetime.datetime.utcnow()
+        print('(#####)girder/girder/model/upload.py:createUpload:adapter='+str(adapter))
 
         if not mimeType:
             mimeType = 'application/octet-stream'
@@ -398,9 +488,15 @@ class Upload(Model):
         upload = adapter.initUpload(upload)
         if save:
             upload = self.save(upload)
+        print('(#####)girder/girder/model/upload.py:createUpload:upload='+str(upload))
         return upload
 
     def moveFileToAssetstore(self, file, user, assetstore, progress=noProgress):
+
+        print('(#####)girder/girder/model/upload.py:moveFileToAssetstore:user='+str(user))
+        print('(#####)girder/girder/model/upload.py:moveFileToAssetstore:assetstore='+str(assetstore))
+        print('(#####)girder/girder/model/upload.py:moveFileToAssetstore:file='+str(file))
+
         """
         Move a file from whatever assetstore it is located in to a different
         assetstore.  This is done by downloading and re-uploading the file.
@@ -449,6 +545,7 @@ class Upload(Model):
         return upload
 
     def list(self, limit=0, offset=0, sort=None, filters=None):
+        print('(#####)girder/girder/model/upload.py:list')
         """
         Search for uploads or simply list all visible uploads.
 
@@ -516,6 +613,8 @@ class Upload(Model):
         :type assetstoreId: str
         :returns: a list of items that were removed or could be removed.
         """
+        print('(#####)girder/girder/model/upload.py:untrackedUploads')
+
         from .assetstore import Assetstore
         from girder.utility import assetstore_utilities
 

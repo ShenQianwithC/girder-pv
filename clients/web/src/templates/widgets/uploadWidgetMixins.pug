@@ -2,15 +2,15 @@ mixin g-upload-widget-subtitle
   if parent && parentType
     .g-dialog-subtitle
       if (parentType === 'folder')
-        i.icon-folder-open
+        i.icon-archive
       else if (parentType === 'item')
-        i.icon-doc-text-inv
+        i.icon-palette
       else if (parentType === 'file')
-        i.icon-doc-inv
+        i.icon-clipboard
       = parent.name()
 
 mixin g-upload-widget-browse-or-drop
-  .g-drop-zone
+  .pv-g-drop-zone
     i.icon-docs
     |  #{browseText}
   .form-group.hide
@@ -26,6 +26,6 @@ mixin g-upload-widget-progress
   .g-upload-error-message.g-validation-failed-message
 
 mixin g-upload-widget-start-button
-  button.g-start-upload.btn.btn-small.btn-primary.disabled(type="submit", disabled)
-    i.icon-upload
-    |  Start Upload
+  button.button.g-start-upload.btn.btn-small.pv-btn-primary.disabled(type="submit", disabled)
+    |  上传
+    i.icon-rocket

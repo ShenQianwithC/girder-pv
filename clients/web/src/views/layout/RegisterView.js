@@ -22,7 +22,7 @@ var RegisterView = View.extend({
             if (this.$('#g-password').val() !== this.$('#g-password2').val()) {
                 this.$('#g-group-password,#g-group-password2').addClass('has-error');
                 this.$('#g-password').focus();
-                this.$('.g-validation-failed-message').text('Passwords must match.');
+                this.$('.g-validation-failed-message').text('两次输入的密码不一致。');
                 return;
             }
 
@@ -30,8 +30,10 @@ var RegisterView = View.extend({
                 login: this.$('#g-login').val(),
                 password: this.$('#g-password').val(),
                 email: this.$('#g-email').val(),
-                firstName: this.$('#g-firstName').val(),
-                lastName: this.$('#g-lastName').val()
+                firstName: '名',
+                lastName: '姓'
+                // firstName: this.$('#g-firstName').val(),
+                // lastName: this.$('#g-lastName').val()
             });
             user.on('g:saved', function () {
                 if (getCurrentUser()) {

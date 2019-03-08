@@ -14,9 +14,11 @@ import ItemListTemplate from 'girder/templates/widgets/itemList.pug';
 var ItemListWidget = View.extend({
     events: {
         'click a.g-item-list-link': function (event) {
-            event.preventDefault();
-            var cid = $(event.currentTarget).attr('g-item-cid');
-            this.trigger('g:itemClicked', this.collection.get(cid), event);
+            // alert('ItemListWidget7');
+            $("a.btn.btn-small.btn-default").click() //关闭图像选择窗口
+            // event.preventDefault(); // For HistomicsTK not back to Item page
+            // var cid = $(event.currentTarget).attr('g-item-cid');
+            // this.trigger('g:itemClicked', this.collection.get(cid), event);
         },
         'click a.g-show-more-items': function () {
             this.collection.fetchNextPage();

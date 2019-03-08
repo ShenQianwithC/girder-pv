@@ -5,20 +5,20 @@ mixin privacyEditor(typeName)
         input#g-access-private(type="radio", name="privacy",
             checked=(publicFlag ? undefined : "checked"))
         i.icon-lock
-        | #[b Private] &mdash; Access is required to view this #{typeName}
+        | #[b Private] &mdash; 需要授权才能查看此 #{typeName}
     .radio
       label
         input#g-access-public(type="radio", name="privacy",
             checked=(publicFlag ? "checked" : undefined))
         i.icon-globe
-        | #[b Public] &mdash; Anyone can view this #{typeName}
+        | #[b Public] &mdash; 任何人都可以访问这个 #{typeName}
 
     if _.keys(flagList).length
-      a.g-action-manage-public-flags.hide(title="Public access flags")
+      a.g-action-manage-public-flags.hide(title="公共访问标志")
         i.g-flag-icon.icon-flag
           - var flagLen = (publicFlags && publicFlags.length) || 0
           .g-flag-count-indicator(class=(flagLen ? null : "hide"))= flagLen
-        |  Manage public access flags...
+        |  管理公共访问标志......
       .g-public-flags-popover-container.hide
         each flag, key in flagList
           - var checked = _.contains(publicFlags, key) ? 'checked' : null;
@@ -27,11 +27,11 @@ mixin privacyEditor(typeName)
             label.g-flag-label(title=flag.description)
               input.g-public-flag-checkbox(flag=key, type="checkbox", checked=checked, disabled=disabled)
               span= flag.name
-        button.g-close-public-flags-popover.btn.btn-xs.btn-default Close
+        button.back.g-close-public-flags-popover.btn.btn-xs.btn-default 关闭
 
 mixin permissionsEditor
   .g-permissions-editor
-    .g-ac-list-title #[i.icon-key-1]  Permissions
+    .g-ac-list-title #[i.icon-key-1]  权限
     .g-ac-list
       #g-ac-list-groups
       #g-ac-list-users

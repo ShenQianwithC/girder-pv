@@ -2,7 +2,7 @@
   .btn-group.pull-right
     if (isMember || isInvited || getCurrentUser() || group.get('_accessLevel') >= AccessType.ADMIN)
       button.g-group-actions-button.btn.btn-default.dropdown-toggle(
-          data-toggle="dropdown", title="Group actions")
+          data-toggle="dropdown", title="组操作Group actions")
         i.icon-users
         |  Actions
         i.icon-down-dir
@@ -44,39 +44,39 @@ if (getCurrentUser())
     .g-group-status-container.g-member
       i.icon-ok
       if (isAdmin)
-        |  You are an #[b administrator] of this group.
+        |  你时该组的 #[b administrator].
       else if (isModerator)
-        |  You are a #[b moderator] of this group.
+        |  你时该组的 #[b moderator].
       else
-        |  You are a #[b member] of this group.
+        |  你时该组的 #[b member].
   else if (isInvited)
     .g-group-status-container.g-invited
       i.icon-mail-alt
-      |  You have been invited to this group.
+      |  你已被邀请加入该组。
       a.g-group-join  Join group
   else if (isRequested)
     .g-group-status-container.g-requested-invite
       i.icon-comment
-      |  You have requested to join this group.
+      |  你被要求加入该组.
   else
     .g-group-status-container.g-nonmember
       i.icon-minus-circled
-      |  You are not a member of this group.
+      |  你不是该组成员.
       a.g-group-request-invite  Request membership
   if (group.get('_accessLevel') >= AccessType.ADMIN && !isAdmin)
     .g-group-status-container.g-admin
       i.icon-star
-      |  You have #[b administrator] privileges.
+      |  你有 #[b administrator] 特权.
 
 ul.g-group-tabs.nav.nav-tabs
   li.active
     a(href="#g-group-tab-roles", data-toggle="tab", name="roles")
       i.icon-th-list
-      |  Roles
+      |  任务Roles
   li
     a(href="#g-group-tab-pending", data-toggle="tab", name="pending")
       i.icon-inbox
-      | Pending
+      | 挂起Pending
       #g-group-tab-pending-status
 
 .tab-content
@@ -88,7 +88,7 @@ ul.g-group-tabs.nav.nav-tabs
     .g-group-requests-container
       .g-group-requests-header.g-group-list-header
         i.icon-comment
-        |  Requests for membership
+        |  要求会员资格Requests for membership
 
       .g-group-requests-body
         ul.g-group-requests
@@ -111,6 +111,6 @@ ul.g-group-tabs.nav.nav-tabs
     .g-group-invites-container
       .g-group-invites-header.g-group-list-header
         i.icon-mail-alt
-        |  Sent invitations
+        |  邀请发送
 
       .g-group-invites-body

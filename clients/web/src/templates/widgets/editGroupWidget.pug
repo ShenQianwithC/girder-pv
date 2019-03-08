@@ -5,9 +5,9 @@
         button.close(data-dismiss="modal", aria-hidden="true", type="button") &times;
         h4.modal-title
           if (group)
-            | Edit group
+            | 编辑组
           else
-            | Create group
+            | 新建组
       .modal-body
         .g-public-container
           .radio
@@ -15,13 +15,13 @@
               input#g-access-private(type="radio", name="privacy",
                   checked=(publicFlag ? undefined : "checked"))
               i.icon-lock
-              | Private &mdash; Only members can see this group
+              | 私有 &mdash; Only members can see this group
           .radio
             label
               input#g-access-public(type="radio", name="privacy",
                   checked=(publicFlag ? "checked" : undefined))
               i.icon-globe
-              | Public &mdash; Anyone can see this group
+              | 公开 &mdash; Anyone can see this group
         .form-group
           label.control-label(for="g-name") Name
           input#g-name.input-sm.form-control(type="text", placeholder="Enter group name")
@@ -44,11 +44,12 @@
               option(value='yesadmin', selected=(addAllowed === 'yesadmin')) Yes - allow group administrators to directly add members
         .g-validation-failed-message
       .modal-footer
-        a.btn.btn-small.btn-default(data-dismiss="modal") Cancel
+        a.btn.btn-small.btn-default(data-dismiss="modal") 取消
+          i.icon-cancel-circled
         button.g-save-group.btn.btn-small.btn-primary(type="submit")
           if (group)
-            i.icon-edit
-            | Save
+            i.icon-floppy
+            | 保存
           else
             i.icon-plus-squared
-            | Create
+            | 新建

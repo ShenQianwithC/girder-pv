@@ -1,27 +1,18 @@
 .modal-dialog
   .modal-content
     form#g-folder-edit-form.modal-form(role="form")
-      .modal-header
-        button.close(data-dismiss="modal", aria-hidden="true", type="button") &times;
-        h4.modal-title
-          if (folder)
-            | Edit folder
-          else
-            | Create folder
       .modal-body
         .form-group
-          label.control-label(for="g-name") Name
-          input#g-name.input-sm.form-control(type="text", placeholder="Enter folder name")
-        .form-group
-          label.control-label Description (optional)
-          .g-description-editor-container
+          label.control-label(for="g-name") 名称
+          input#g-name.input-sm.form-control(type="text", placeholder="请输入文件夹名称")
         .g-validation-failed-message
       .modal-footer
-        a.btn.btn-small.btn-default(data-dismiss="modal") Cancel
-        button.g-save-folder.btn.btn-small.btn-primary(type="submit")
+        button.back.btn.btn-small.btn-default(data-dismiss="modal") 取消
+          i.icon-cancel-circled
+        button.buttion.g-save-folder.btn.btn-small.btn-primary(type="submit")
           if (folder)
-            i.icon-edit
-            | Save
+            i.icon-floppy
+            | 保存
           else
-            i.icon-plus-squared
-            | Create
+            i.icon-feather
+            | 新建

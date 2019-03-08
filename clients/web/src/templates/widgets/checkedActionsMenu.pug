@@ -1,39 +1,41 @@
-li.g-checked-menu-header.dropdown-header(role="presentation")
+li.g-checked-menu-header.pv-dropdown-header(role="presentation")
   if folderCount
-    i.icon-folder
-    span.g-checked-folder-count #{folderCount}
+    i.icon-archive
+    span.g-checked-folder-count #{folderCount}个文件夹
+
   if itemCount
-    i.icon-doc-text-inv
-    span.g-checked-item-count #{itemCount}
+    i.icon-docs
+    span.g-checked-item-count #{itemCount}个图像
+
   if pickedCount
     i.icon-plus-circled
-    span.g-checked-picked-count #{pickedCount}
+    span.g-checked-picked-count #{pickedCount}个选择移动或复制的对象
 if folderCount || itemCount
   li
     a.g-download-checked
       i.icon-download
-      | Download checked resources
+      | 下载选择的对象
   li
     a.g-pick-checked
-      i.icon-plus-circled
-      | Pick checked resources for Move or Copy
+      i.icon-picture
+      | 选择移动或复制的对象
 
 if HierarchyWidget.getPickedResources()
   li.g-admin.divider
   if pickedMoveAllowed
     li
       a.g-move-picked
-        i.icon-move
-        | Move picked resources here
+        i.icon-export
+        | 移动选择的对象到当前位置
   if pickedCopyAllowed
     li
       a.g-copy-picked
-        i.icon-paste
-        | Copy picked resources here
+        i.icon-cc-share
+        | 复制选择的对象到当前位置
   li
     a.g-clear-picked
       i.icon-minus-circled
-      | Clear picked resources
+      | 清除选择的对象
       if pickedDesc
         |  (#{pickedDesc})
 
@@ -43,4 +45,4 @@ if folderCount || itemCount
     li.g-admin
       a.g-delete-checked
         i.icon-trash
-        | Delete checked resources
+        | 删除选择的对象

@@ -38,6 +38,12 @@ def main(testing, database, host, port):
         cherrypy.config['server.socket_host'] = host
     if port:
         cherrypy.config['server.socket_port'] = port
+
+    ### pvWeb add ssl for https  ###
+    cherrypy.config['server.ssl_module'] = 'builtin'
+    cherrypy.config['server.ssl_certificate'] = '/opt/histomicstk/girder/girder/cli/cert.pem'
+    cherrypy.config['server.ssl_private_key'] = '/opt/histomicstk/girder/girder/cli/privkey.pem'
+
     server.setup(testing)
 
     cherrypy.engine.start()

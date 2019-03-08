@@ -19,7 +19,7 @@ import 'bootstrap/js/tab';
 var MarkdownWidget = View.extend({
     events: {
         'show.bs.tab .g-preview-link': function () {
-            renderMarkdown(this.val().trim() || 'Nothing to show',
+            renderMarkdown(this.val().trim() || '没有预览',
                 this.$('.g-markdown-preview'));
         },
 

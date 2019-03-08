@@ -85,13 +85,13 @@ class User(AccessControlledModel):
             # Internal error, this should not happen
             raise Exception('Tried to save user document with no salt.')
 
-        if not doc['firstName']:
-            raise ValidationException('First name must not be empty.',
-                                      'firstName')
-
-        if not doc['lastName']:
-            raise ValidationException('Last name must not be empty.',
-                                      'lastName')
+        # if not doc['firstName']:
+        #     raise ValidationException('First name must not be empty.',
+        #                               'firstName')
+        #
+        # if not doc['lastName']:
+        #     raise ValidationException('Last name must not be empty.',
+        #                               'lastName')
 
         if doc['status'] not in ('pending', 'enabled', 'disabled'):
             raise ValidationException(
@@ -100,14 +100,14 @@ class User(AccessControlledModel):
         if '@' in doc['login']:
             # Hard-code this constraint so we can always easily distinguish
             # an email address from a login
-            raise ValidationException('Login may not contain "@".', 'login')
+            raise ValidationException('用户名不能包含"@".', 'login')
 
         if not re.match(cur_config['users']['login_regex'], doc['login']):
             raise ValidationException(
                 cur_config['users']['login_description'], 'login')
 
         if not re.match(cur_config['users']['email_regex'], doc['email']):
-            raise ValidationException('Invalid email address.', 'email')
+            raise ValidationException('无效的邮箱地址.', 'email')
 
         # Ensure unique logins
         q = {'login': doc['login']}
@@ -115,7 +115,7 @@ class User(AccessControlledModel):
             q['_id'] = {'$ne': doc['_id']}
         existing = self.findOne(q)
         if existing is not None:
-            raise ValidationException('That login is already registered.',
+            raise ValidationException('该用户名已存在.',
                                       'login')
 
         # Ensure unique emails
@@ -124,7 +124,7 @@ class User(AccessControlledModel):
             q['_id'] = {'$ne': doc['_id']}
         existing = self.findOne(q)
         if existing is not None:
-            raise ValidationException('That email is already registered.',
+            raise ValidationException('该邮箱已被使用.',
                                       'email')
 
         # If this is the first user being created, make it an admin
@@ -176,7 +176,7 @@ class User(AccessControlledModel):
 
         user = self.findOne({loginField: login})
         if user is None:
-            raise AccessException('Login failed.')
+            raise AccessException('登录失败.')
 
         # Handle OTP token concatenation
         if otpToken is True and self.hasOtpEnabled(user):
@@ -187,7 +187,7 @@ class User(AccessControlledModel):
 
         # Verify password
         if not Password().authenticate(user, password):
-            raise AccessException('Login failed.')
+            raise AccessException('登录失败.')
 
         # Verify OTP
         if self.hasOtpEnabled(user):

@@ -5,7 +5,7 @@ each obj in links
       if obj.resourceName === 'user'
         i.icon-user
       else if obj.resourceName === 'collection'
-        i.icon-sitemap
+        i.icon-home
       = obj.name()
   - idx += 1
 
@@ -14,7 +14,7 @@ if current
     if current.resourceName === 'user'
       i.icon-user
     else if current.resourceName === 'collection'
-      i.icon-sitemap
+      i.icon-home
     = current.name()
 
 if descriptionText
@@ -22,16 +22,16 @@ if descriptionText
 
 .pull-right
   .g-child-count-container.hide
-    .g-subfolder-count-container(title='total folders')
-      i.icon-folder
+    .g-subfolder-count-container(title='个文件夹')
+      i.icon-archive
       .g-subfolder-count
 
     if idx > 0
-      .g-item-count-container(title='total items')
-        i.icon-doc-text-inv
+      .g-item-count-container(title='个图像')
+        i.icon-docs
         .g-item-count
 
   if idx > 0
     .g-level-up-button-container
-      a.g-hierarchy-level-up(title="Go up one level")
-        i.icon-level-up
+      a.g-hierarchy-level-up(title="返回上一层")
+        i.icon-reply

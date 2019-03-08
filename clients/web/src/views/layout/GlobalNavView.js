@@ -40,17 +40,9 @@ var LayoutGlobalNavView = View.extend({
             this.navItems = settings.navItems;
         } else {
             this.defaultNavItems = [{
-                name: 'Collections',
-                icon: 'icon-sitemap',
+                name: '图像库入口',
+                icon: 'icon-attach',
                 target: 'collections'
-            }, {
-                name: 'Users',
-                icon: 'icon-user',
-                target: 'users'
-            }, {
-                name: 'Groups',
-                icon: 'icon-users',
-                target: 'groups'
             }];
         }
     },
@@ -65,9 +57,14 @@ var LayoutGlobalNavView = View.extend({
                 // copy navItems so that this.defaultNavItems is unchanged
                 navItems = navItems.slice();
                 navItems.push({
-                    name: 'Admin console',
-                    icon: 'icon-wrench',
+                    name: '系统功能',
+                    icon: 'icon-cog',
                     target: 'admin'
+                },
+                {
+                name: '用户管理',
+                icon: 'icon-users',
+                target: 'users'
                 });
             }
         }

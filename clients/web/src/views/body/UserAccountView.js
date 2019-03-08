@@ -46,7 +46,7 @@ var UserAccountView = View.extend({
                 .on('g:saved', function () {
                     events.trigger('g:alert', {
                         icon: 'ok',
-                        text: 'Info saved.',
+                        text: '用户信息已更改.',
                         type: 'success',
                         timeout: 4000
                     });
@@ -59,7 +59,7 @@ var UserAccountView = View.extend({
             if (this.$('#g-password-new').val() !==
                     this.$('#g-password-retype').val()) {
                 this.$('#g-password-change-error-msg').text(
-                    'Passwords do not match, try again.'
+                    '两次输入的密码不一致, 请重试.'
                 );
                 this.$('#g-password-retype,#g-password-new').val('');
                 this.$('#g-password-new').focus();
@@ -73,7 +73,7 @@ var UserAccountView = View.extend({
                 .on('g:passwordChanged', function () {
                     events.trigger('g:alert', {
                         icon: 'ok',
-                        text: 'Password changed.',
+                        text: '密码已更改.',
                         type: 'success',
                         timeout: 4000
                     });

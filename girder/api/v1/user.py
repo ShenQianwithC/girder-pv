@@ -146,7 +146,7 @@ class User(Resource):
             'message': 'Login succeeded.'
         }
 
-    @access.public
+    @access.user
     @autoDescribeRoute(
         Description('Log out of the system.')
         .responseClass('Token')
@@ -285,7 +285,7 @@ class User(Resource):
         token = None
 
         if not old:
-            raise RestException('Old password must not be empty.')
+            raise RestException('当前密码不能为空.')
 
         if not Password().hasPassword(user) or not Password().authenticate(user, old):
             # If not the user's actual password, check for temp access token
@@ -293,7 +293,7 @@ class User(Resource):
             if (not token or not token.get('userId') or
                     token['userId'] != user['_id'] or
                     not Token().hasScope(token, TokenScope.TEMPORARY_USER_AUTH)):
-                raise AccessException('Old password is incorrect.')
+                raise AccessException('当前密码不正确.')
 
         self._model.setPassword(user, new)
 

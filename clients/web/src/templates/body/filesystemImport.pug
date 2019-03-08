@@ -18,18 +18,18 @@ form.g-filesystem-import-form
   .form-group
     label(for="g-filesystem-import-dest-type") Destination type
     select#g-filesystem-import-dest-type.form-control
-      option(value="folder") Folder
-      option(value="user") User
-      option(value="collection") Collection
+      option(value="folder") 文件夹Folder
+      option(value="user") 用户User
+      option(value="collection") 集合Collection
   .form-group
-    label(for="g-filesystem-import-dest-id") Destination ID
+    label(for="g-filesystem-import-dest-id") 目标Destination ID
     .input-group.input-group-sm
       input#g-filesystem-import-dest-id.form-control.input-sm(
           type="text",
-          placeholder="Existing folder, user, or collection ID to use as the destination")
+          placeholder="用作目标的文件夹，用户或集合ID")
       .input-group-btn
         button.g-open-browser.btn.btn-default(type="button")
-          i.icon-folder-open
+          i.icon-folder
   .form-group
     label(for="g-filesystem-import-leaf-items") Leaf Folders as Items
     select#g-filesystem-import-leaf-items.form-control
@@ -38,4 +38,4 @@ form.g-filesystem-import-form
   .g-validation-failed-message
   button.g-submit-assetstore-import.btn.btn-success(type="submit")
     i.icon-link-ext
-    |  Begin import
+    |  开始导入Begin import

@@ -33,11 +33,13 @@
                 span= tokenScope.name
         .g-validation-failed-message
       .modal-footer
-        a.btn.btn-small.btn-default(data-dismiss="modal") Cancel
+        a.btn.btn-small.btn-default(data-dismiss="modal") 取消
+          i.icon-cancel-circled
         button.g-save-api-key.btn.btn-small.btn-primary(type="submit")
           if apiKey
-            i.icon-edit
-            |  Save
+            |  保存
+            i.icon-install
           else
-            i.icon-plus-squared
-            |  Create
+            i.icon-check
+            |  新建
+            i.icon-check

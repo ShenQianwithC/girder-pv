@@ -5,23 +5,24 @@
         button.close(data-dismiss="modal", aria-hidden="true", type="button") &times;
         h4.modal-title
           if (item)
-            | Edit item
+            | 编辑项目
           else
-            | Create item
+            | 新建项目
       .modal-body
         .form-group
-          label.control-label(for="g-name") Name
-          input#g-name.input-sm.form-control(type="text", placeholder="Enter item name")
+          label.control-label(for="g-name") 名称
+          input#g-name.input-sm.form-control(type="text", placeholder="输入项目名称")
         .form-group
           label.control-label Description (optional)
           .g-description-editor-container
         .g-validation-failed-message
       .modal-footer
-        a.btn.btn-small.btn-default(data-dismiss="modal") Cancel
+        a.btn.btn-small.btn-default(data-dismiss="modal") 取消
+          i.icon-cancel-circled
         button.g-save-item.btn.btn-small.btn-primary(type="submit")
           if (item)
-            i.icon-edit
-            | Save
+            i.icon-floppy
+            | 保存
           else
             i.icon-plus-squared
-            | Create
+            | 新建

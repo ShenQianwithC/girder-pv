@@ -6,11 +6,12 @@ ol.breadcrumb
           i.icon-user
           = parent.object.login
         else if (parent.type === "collection")
-          i.icon-sitemap
+          i.icon-home
           = parent.object.name
         else
+          i.icon-archive
           = parent.object.name
 
   .pull-right
-    a.g-hierarchy-level-up(title="Go to parent folder")
-      i.icon-level-up
+    a.g-hierarchy-level-up(title="返回上一级目录")
+      i.icon-reply

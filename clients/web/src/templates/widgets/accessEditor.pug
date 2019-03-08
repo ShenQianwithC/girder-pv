@@ -4,7 +4,7 @@ include accessEditorMixins
   .modal-content
     .modal-header
       button.close(data-dismiss="modal", aria-hidden="true", type="button") &times;
-      h4.modal-title Access control
+      h4.modal-title 访问控制
       .g-dialog-subtitle
         if (modelType === 'folder')
           i.icon-folder
@@ -19,5 +19,5 @@ include accessEditorMixins
         +recurseOption(modelType)
 
     .modal-footer
-      a.btn.btn-small.btn-default(data-dismiss="modal") Close
+      button.back.btn.btn-small.btn-default(data-dismiss="modal") 关闭
       +saveAccessButton

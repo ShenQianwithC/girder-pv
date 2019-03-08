@@ -1,17 +1,14 @@
 .modal-dialog
   .modal-content
     form#g-login-form.modal-form(role="form")
-      .modal-header
-        button.close(data-dismiss="modal", aria-hidden="true", type="button") &times;
-        h4.modal-title Log in
       .modal-body
         if enablePasswordLogin
           .form-group
-            label.control-label(for="g-login") Login or email
-            input#g-login.input-sm.form-control(type="text", placeholder="Enter login")
+            label.control-label(for="g-login") 用户名或邮箱
+            input#g-login.input-sm.form-control(type="text", placeholder="输入用户名或邮箱")
           .form-group
-            label.control-label(for="g-password") Password
-            input#g-password.input-sm.form-control(type="password", placeholder="Enter password")
+            label.control-label(for="g-password") 密码
+            input#g-password.input-sm.form-control(type="password", placeholder="输入密码")
           #g-login-otp-group.form-group.hidden
             label.control-label(for="g-login-otp") Two-factor code
             input#g-login-otp.input-sm.form-control(
@@ -19,12 +16,13 @@
           .g-validation-failed-message
           .g-bottom-message
             if registrationPolicy !== 'closed'
-              | Don't have an account yet?
-              a.g-register-link  Register here.
+              | 还没有账户?
+              a.g-register-link  注册
               |  |
-            a.g-forgot-password  Forgot your password?
+            a.g-forgot-password  忘记密码?
       .modal-footer
-        a.btn.btn-default(data-dismiss="modal") Close
-        button#g-login-button.btn.btn-primary(type="submit")
+        button.back.btn.btn-default(data-dismiss="modal") 关闭
+          i.icon-cancel-circled
+        button.button#g-login-button.btn.btn-primary(type="submit")
           i.icon-login
-          |  Login
+          |  登录

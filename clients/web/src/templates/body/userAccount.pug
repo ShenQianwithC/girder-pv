@@ -1,48 +1,39 @@
 .g-account-header
-  .g-user-name.g-body-title= user.name()
   .g-user-description.g-body-subtitle= user.get('login')
 
 ul.g-account-tabs.nav.nav-tabs
   li.active
     a(href="#g-account-tab-info", data-toggle="tab", name="info")
       i.icon-info-circled
-      |  Profile
+      |  用户信息
   li
     a(href="#g-account-tab-password", data-toggle="tab", name="password")
       i.icon-lock
-      | Password
-  li
-    a(href="#g-account-tab-api-keys", data-toggle="tab", name="apikeys")
-      i.icon-key-inv
-      | API keys
-  li
-    a(href="#g-account-tab-otp", data-toggle="tab", name="otp")
-      i.icon-mobile
-      | Two-factor authentication
+      | 密码
 
 .tab-content
   #g-account-tab-info.tab-pane.active
     .g-user-info-container.g-user-settings-container
       form#g-user-info-form(role="form")
         .form-group
-          label(for="g-login") Login
+          label(for="g-login") 用户名
           p.form-control-static= user.get('login')
         .form-group
-          label(for="g-email") Email
+          label(for="g-email") 邮箱
           input#g-email.input-sm.form-control(type="text", value=user.get('email'))
         .form-group
-          label(for="g-firstName") First name
-          input#g-firstName.input-sm.form-control(type="text", value=user.get('firstName'))
-        .form-group
-          label(for="g-lastName") Last name
+          label(for="g-lastName") 姓
           input#g-lastName.input-sm.form-control(type="text", value=user.get('lastName'))
+        .form-group
+          label(for="g-firstName") 名
+          input#g-firstName.input-sm.form-control(type="text", value=user.get('firstName'))
         if getCurrentUser().get('admin')
           .form-group
-            label(for="g-admin") User is site admin
+            label(for="g-admin") 该用户是管理员
             input#g-admin.input-sm-form-control(type="checkbox", checked=user.get('admin'))
         button.btn.btn-default.btn-sm(type="submit")
-          i.icon-edit
-          | Save
+          i.icon-floppy
+          | 保存
         #g-user-info-error-msg.g-validation-failed-message
 
   #g-account-tab-password.tab-pane
@@ -52,17 +43,17 @@ ul.g-account-tabs.nav.nav-tabs
           input#g-password-old.input-sm.form-control(type="hidden", value=temporaryToken)
         else if isCurrentUser
           .form-group
-            label(for="g-password-old") Current password
-            input#g-password-old.input-sm.form-control(type="password", placeholder="Enter current password")
+            label(for="g-password-old") 当前密码
+            input#g-password-old.input-sm.form-control(type="password", placeholder="输入当前密码")
         .form-group
-          label(for="g-password-new") New password
-          input#g-password-new.input-sm.form-control(type="password", placeholder="Enter new password")
+          label(for="g-password-new") 新密码
+          input#g-password-new.input-sm.form-control(type="password", placeholder="输入新密码")
         .form-group
-          label(for="g-password-retype") Retype new password
-          input#g-password-retype.input-sm.form-control(type="password", placeholder="Retype new password")
+          label(for="g-password-retype") 再次输入新密码
+          input#g-password-retype.input-sm.form-control(type="password", placeholder="再次输入新密码")
         button.btn.btn-default.btn-sm(type="submit")
           i.icon-lock
-          | Change
+          | 更改
         #g-password-change-error-msg.g-validation-failed-message
   #g-account-tab-api-keys.tab-pane
     .g-api-keys-container.g-user-settings-container

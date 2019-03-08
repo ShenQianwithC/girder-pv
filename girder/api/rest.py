@@ -537,9 +537,16 @@ def _createResponse(val):
     # Default behavior will just be normal JSON output. Keep this
     # outside of the loop body in case no Accept header is passed.
     setResponseHeader('Content-Type', 'application/json')
-    return json.dumps(val, sort_keys=True, allow_nan=False,
-                      cls=JsonEncoder).encode('utf8')
+#     return json.dumps(val, sort_keys=True, allow_nan=False,
+#                       cls=JsonEncoder).encode('utf8')
 
+# For outputting annotation
+#     print('(#####)girder/girder/api/rest.py-_createResponse:json.dumps='+(json.dumps(val, sort_keys=True, allow_nan=False, cls=JsonEncoder).encode('utf8')))
+    print('(#####)girder/girder/api/rest.py-_createResponse:accepts='+str(accepts))    
+    if accepts:
+        return json.dumps(val, sort_keys=True, allow_nan=False, cls=JsonEncoder)
+    else:
+        return str(val)
 
 def _handleRestException(e):
     # Handle all user-error exceptions from the REST layer
@@ -628,6 +635,7 @@ def endpoint(fun):
         cherrypy.lib.caching.expires(0)
         try:
             val = fun(self, path, params)
+            logger.info('(#####)girder/girder/api/rest.py-endpointDecorator:path='+str(path))
 
             # If this is a partial response, we set the status appropriately
             if 'Content-Range' in cherrypy.response.headers:
@@ -664,15 +672,12 @@ def endpoint(fun):
             # These are unexpected failures; send a 500 status
             logger.exception('500 Error')
             cherrypy.response.status = 500
-            val = dict(type='internal')
-
-            if config.getConfig()['server']['mode'] == 'production':
-                # Sanitize errors in production mode
-                val['message'] = 'An unexpected error occurred on the server.'
-            else:
-                # Provide error details in non-production modes
-                t, value, tb = sys.exc_info()
-                val['message'] = '%s: %s' % (t.__name__, repr(value))
+            t, value, tb = sys.exc_info()
+            val = {'message': '%s: %s' % (t.__name__, repr(value)),
+                   'type': 'internal'}
+            curConfig = config.getConfig()
+            if curConfig['server']['mode'] != 'production':
+                # Unless we are in production mode, send a traceback too
                 val['trace'] = traceback.extract_tb(tb)
 
         resp = _createResponse(val)
@@ -725,8 +730,6 @@ def _setCommonCORSHeaders():
 
     if allowed:
         setResponseHeader('Access-Control-Allow-Credentials', 'true')
-        setResponseHeader(
-            'Access-Control-Expose-Headers', Setting().get(SettingKey.CORS_EXPOSE_HEADERS))
 
         allowed_list = [o.strip() for o in allowed.split(',')]
         key = 'Access-Control-Allow-Origin'
@@ -968,6 +971,9 @@ class Resource(ModelImporter):
         else:
             self._defaultAccess(handler)
             val = handler(**kwargs)
+#         print('(#####)girder/girder/api/rest.py-handleRoute():val=' + str(val))
+        print('(#####)girder/girder/api/rest.py-handleRoute():handler=' + str(handler))
+        print('(#####)girder/girder/api/rest.py-handleRoute():kwargs=' + str(kwargs))
 
         # Fire the after-call event that has a chance to augment the
         # return value of the API method that was called. You can
@@ -1210,6 +1216,8 @@ class Resource(ModelImporter):
 
     @endpoint
     def GET(self, path, params):
+        print('(#####)girder/girder/api/rest.py-GET():path=' + str(path))
+        print('(#####)girder/girder/api/rest.py-GET():params=' + str(params))
         return self.handleRoute('GET', path, params)
 
     @endpoint
@@ -1280,6 +1288,7 @@ def boundHandler(fun, ctx=None):
 
     @six.wraps(fun)
     def wrapped(*args, **kwargs):
+        print('(#####)girder/girder/api/rest.py-wrapped():ctx=' + str(ctx))        
         return fun(ctx, *args, **kwargs)
 
     return wrapped

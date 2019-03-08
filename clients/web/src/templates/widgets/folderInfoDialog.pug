@@ -8,7 +8,7 @@ mixin dateInfo(intro, property)
   .modal-content
     .modal-header
       button.close(data-dismiss="modal", aria-hidden="true") &times;
-      h4.modal-title Folder information
+      h4.modal-title 文件夹信息
       .g-dialog-subtitle
         i.icon-folder
         span= folder.name()
@@ -22,7 +22,7 @@ mixin dateInfo(intro, property)
           +dateInfo('Last updated ', 'updated')
 
         .g-folder-info-line(property="nItems")
-          i.icon-doc-text-inv
+          i.icon-newspaper
           span Contains
           span.g-bold-part  #{folder.get('nItems')} items
           span  totaling
@@ -39,4 +39,4 @@ mixin dateInfo(intro, property)
           span.g-bold-part  #{folder.id}
 
     .modal-footer
-      a.btn.btn-small.btn-default(data-dismiss="modal") Close
+      button.back.btn.btn-small.btn-default(data-dismiss="modal") 关闭

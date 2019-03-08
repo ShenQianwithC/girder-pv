@@ -43,25 +43,25 @@ var UploadWidget = View.extend({
                 this.filesChanged();
             }
         },
-        'click .g-drop-zone': function () {
+        'click .pv-g-drop-zone': function () {
             this.$('#g-files').click();
         },
-        'dragenter .g-drop-zone': function (e) {
+        'dragenter .pv-g-drop-zone': function (e) {
             e.stopPropagation();
             e.preventDefault();
             e.originalEvent.dataTransfer.dropEffect = 'copy';
-            this.$('.g-drop-zone')
+            this.$('.pv-g-drop-zone')
                 .addClass('g-dropzone-show')
                 .html('<i class="icon-bullseye"/> Drop files here');
         },
-        'dragleave .g-drop-zone': function (e) {
+        'dragleave .pv-g-drop-zone': function (e) {
             e.stopPropagation();
             e.preventDefault();
-            this.$('.g-drop-zone')
+            this.$('.pv-g-drop-zone')
                 .removeClass('g-dropzone-show')
-                .html('<i class="icon-docs"/> Browse or drop files');
+                .html('<i class="icon-leaf"/> 请选择文件');
         },
-        'dragover .g-drop-zone': function (e) {
+        'dragover .pv-g-drop-zone': function (e) {
             var dataTransfer = e.originalEvent.dataTransfer;
             if (!dataTransfer) {
                 return;
@@ -72,7 +72,7 @@ var UploadWidget = View.extend({
 
             e.preventDefault();
         },
-        'drop .g-drop-zone': 'filesDropped'
+        'drop .pv-g-drop-zone': 'filesDropped'
     },
 
     /**
@@ -129,8 +129,8 @@ var UploadWidget = View.extend({
         this.overrideStart = settings.overrideStart || false;
         this.otherParams = settings.otherParams || {};
 
-        this._browseText = this.multiFile ? 'Browse or drop files here' : 'Browse or drop a file here';
-        this._noneSelectedText = this.multiFile ? 'No files selected' : 'No file selected';
+        this._browseText = this.multiFile ? '请选择文件' : '请选择文件';
+        // this._noneSelectedText = this.multiFile ? 'No files selected' : 'No file selected';
     },
 
     render: function () {
@@ -172,7 +172,7 @@ var UploadWidget = View.extend({
         e.stopPropagation();
         e.preventDefault();
 
-        this.$('.g-drop-zone')
+        this.$('.pv-g-drop-zone')
             .removeClass('g-dropzone-show')
             .html(`<i class="icon-docs"/> ${this._browseText}`);
 
@@ -207,13 +207,13 @@ var UploadWidget = View.extend({
             var msg;
 
             if (this.files.length > 1) {
-                msg = 'Selected ' + this.files.length + ' files';
+                msg = '选择' + this.files.length + ' files';
             } else {
-                msg = 'Selected <b>' + this.files[0].name + '</b>';
+                msg = '选择 <b>' + this.files[0].name + '</b>';
             }
             this.$('.g-overall-progress-message').html('<i class="icon-ok"/> ' +
                 msg + '  (' + formatSize(this.totalSize) +
-                ') -- Press start button');
+                ') >> 点击"上传"');
             this.setUploadEnabled(true);
             this.$('.g-progress-overall,.g-progress-current').addClass('hide');
             this.$('.g-current-progress-message').empty();
@@ -225,7 +225,7 @@ var UploadWidget = View.extend({
 
     startUpload: function () {
         this.setUploadEnabled(false);
-        this.$('.g-drop-zone').addClass('hide');
+        this.$('.pv-g-drop-zone').addClass('hide');
         this.$('.g-progress-overall').removeClass('hide');
         this.$('.g-upload-error-message').empty();
 

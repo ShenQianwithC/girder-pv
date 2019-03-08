@@ -2,79 +2,78 @@
   .g-hierarchy-breadcrumb-bar
     ol.breadcrumb
   if showActions
-    .g-hierarchy-actions-header
-      if checkboxes
-        input.g-select-all(type="checkbox", title="Select / Unselect all")
+      .g-collection-pagination
+      .g-hierarchy-actions-header
+        if checkboxes
+          input(class="g-select-all", type="checkbox", title="全选择 / 全不选")
+          | 全选择 / 全不选
 
-        .btn-group
-          button.g-checked-actions-button.btn.btn-sm.btn-default.dropdown-toggle(
-            data-toggle="dropdown", disabled="disabled", title="Checked actions")
-            i.icon-check
-            i.icon-down-dir
-          ul.g-checked-actions-menu.dropdown-menu(role="menu")
-
-      .g-folder-header-buttons
-        if (type === 'folder')
-          button.g-folder-info-button.btn.btn-sm.btn-info(title="Show folder info")
-            i.icon-info
-          if (level >= AccessType.WRITE)
-            button.g-upload-here-button.btn.btn-sm.btn-success(title="Upload here")
-              i.icon-upload
-          if (level >= AccessType.ADMIN)
-            button.g-folder-access-button.g-edit-access.btn.btn-sm.btn-warning(title="Access control")
-              i.icon-lock
-        else if (type === 'collection')
-          button.g-collection-info-button.btn.btn-sm.btn-info(title="Show collection info")
-            i.icon-info
-          if (level >= AccessType.ADMIN)
-            button.g-edit-access.btn.btn-sm.btn-warning(title="Access control")
-              i.icon-lock
-        .btn-group
-          button.g-folder-actions-button.btn.btn-sm.btn-default.dropdown-toggle(
-              data-toggle="dropdown", title=`${capitalize(type)} actions`)
+        .g-folder-header-buttons
+          if (type === 'folder')
+            if (level >= AccessType.WRITE)
+              button.g-upload-here-button.btn.btn-sm.pv-btn-success(title="文件上传") 病理图像上传
+                i.icon-upload
+            if (level >= AccessType.ADMIN)
+          else if (type === 'collection')
+              hidden
+          .btn-group
+            .btn-group
+              button.button.g-checked-actions-button.btn.btn-sm.btn-default.dropdown-toggle(
+                data-toggle="dropdown", disabled="disabled", title="Checked actions") 功能选项
+                i.icon-lamp
+              ul.g-checked-actions-menu.dropdown-menu(role="menu")
             if type === 'collection'
-              i.icon-sitemap
+              button.g-folder-actions-button.btn.btn-sm.btn-default.dropdown-toggle(
+                  data-toggle="dropdown", title=`图像库操作`) 图像库功能
+                i.icon-leaf
             else if type === 'user'
-              i.icon-user
+              button.g-folder-actions-button.btn.btn-sm.btn-default.dropdown-toggle(
+                  data-toggle="dropdown", title=`用户操作`) 用户功能
+                i.icon-users
             else if type === 'folder'
-              i.icon-folder-open
-            i.icon-down-dir
-          ul.g-folder-actions-menu.dropdown-menu.pull-right(role="menu")
-            li.dropdown-header(role="presentation")
-              if type === 'collection'
-                i.icon-sitemap
-              else if type === 'user'
-                i.icon-user
-              else if type === 'folder'
-                i.icon-folder-open
-              |  #{model.name()}
-            if type === 'folder' || type === 'collection'
-              li(role="presentation")
-                a.g-download-folder(role="menuitem", href=model.downloadUrl())
-                  i.icon-download
-                  | Download #{type}
-            if level >= AccessType.WRITE
-              li(role="presentation")
-                a.g-create-subfolder(role="menuitem")
-                  i.icon-folder
-                  | Create folder here
+              button.g-folder-actions-button.btn.btn-sm.btn-default.dropdown-toggle(
+                  data-toggle="dropdown", title=`文件夹操作`) 文件夹功能
+                i.icon-box
+            ul.g-folder-actions-menu.dropdown-menu.pull-right(role="menu")
+              li.pv-dropdown-header(role="presentation")
+                if type === 'collection'
+                  i.icon-home
+                else if type === 'user'
+                  i.icon-users
+                else if type === 'folder'
+                  i.icon-archive
+                |  #{model.name()}
               if type === 'folder' || type === 'collection'
-                if type === 'folder'
-                  li(role="presentation")
-                    a.g-create-item(role="menuitem")
-                      i.icon-doc
-                      | Create item here
                 li(role="presentation")
-                  a.g-edit-folder(role="menuitem")
-                    i.icon-edit
-                    | Edit #{type}
-            if level >= AccessType.ADMIN && (type === 'folder' || type === 'collection')
-              li.divider(role="presentation")
-              li(role="presentation")
-                a.g-delete-folder(role="menuitem")
-                  i.icon-trash
-                  | Delete this #{type}
-      .g-clear-right
+                  a.g-download-folder(role="menuitem", href=model.downloadUrl())
+                    i.icon-download
+                    if type === 'collection'
+                      | 下载病理图片库
+                    else
+                      | 下载文件夹
+              if level >= AccessType.WRITE
+                li(role="presentation")
+                  a.g-create-subfolder(role="menuitem")
+                    i.icon-list-add
+                    | 新建文件夹
+                if type === 'folder' || type === 'collection'
+                  li(role="presentation")
+                    a.g-edit-folder(role="menuitem")
+                      i.icon-feather
+                      if type === 'collection'
+                        | 编辑病理图片库
+                      else
+                        | 编辑文件夹
+              if level >= AccessType.ADMIN && (type === 'folder' || type === 'collection')
+                li.divider(role="presentation")
+                li(role="presentation")
+                  a.g-delete-folder(role="menuitem")
+                    i.icon-trash
+                    if type === 'collection'
+                      | 删除该病理图片库
+                    else
+                      | 删除该文件夹
+        .g-clear-right
   if onFolderSelect
     .g-select-folder-container
       ul.g-folder-list
@@ -88,8 +87,6 @@
   .g-empty-parent-message.g-info-message-container.hide
     i.icon-info-circled
     if itemFilter
-      |  This folder has no suitable items.
+      |  该文件夹可显示的图像
     else
-      |  This folder is empty.
-if showMetadata
-  .g-folder-metadata
+      |  空文件夹

@@ -19,7 +19,7 @@ ol.breadcrumb
   if JobStatus.isCancelable(job)
     button.g-job-cancel.btn.btn-default.btn-sm(type="button")
       i.icon-cancel
-      | Cancel
+      | 取消
 if job.get('timestamps') && job.get('timestamps').length
   .g-field-container
     .g-job-info-key Timeline:

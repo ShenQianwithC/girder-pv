@@ -8,7 +8,7 @@ mixin dateInfo(intro, property)
   .modal-content
     .modal-header
       button.close(data-dismiss="modal", aria-hidden="true") &times;
-      h4.modal-title Collection information
+      h4.modal-title 资源库信息
       .g-dialog-subtitle
         i.icon-sitemap
         span= collection.name()
@@ -23,15 +23,15 @@ mixin dateInfo(intro, property)
 
         .g-collection-info-line(property="size")
           i.icon-floppy
-          | Total size: #[span.g-bold-part= formatSize(collection.get('size'))]
+          | 大小: #[span.g-bold-part= formatSize(collection.get('size'))]
 
         .g-collection-info-line(property="nFolders")
           i.icon-folder
-          | Contains #[span.g-bold-part= collection.get('nFolders')] subfolders
+          | 包含 #[span.g-bold-part= collection.get('nFolders')] 子文件夹
 
         .g-collection-info-line(property="id")
           i.icon-share
-          | Unique ID: #[span.g-bold-part= collection.id]
+          | 唯一ID: #[span.g-bold-part= collection.id]
 
     .modal-footer
-      a.btn.btn-small.btn-default(data-dismiss="modal") Close
+      button.back.btn.btn-small.btn-default(data-dismiss="modal") 关闭

@@ -10,5 +10,5 @@
         input#g-confirm-text.input-sm.form-control(type='text', name='confirmMsg')
         spam.g-msg-error
     .modal-footer
-      a.btn.btn-small.btn-default(data-dismiss="modal")= params.noText
-      a#g-confirm-button.btn.btn-small(class=params.yesClass)= params.yesText
+      button.back.btn.btn-small.btn-default(data-dismiss="modal")= params.noText
+      button.button#g-confirm-button.btn.btn-small(class=params.yesClass)= params.yesText

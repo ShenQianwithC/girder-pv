@@ -7,33 +7,33 @@ form.g-settings-form(role="form")
       input#g-core-brand-name.form-control.input-sm(
           type="text", value=settings['core.brand_name'] || '',
           placeholder=`Default: ${defaults['core.brand_name'] || 'none'}`,
-          title="The brand name of the application.")
+          title="系統名称")
     .form-group
       label(for="g-core-contact-email-address") Contact email address
       input#g-core-contact-email-address.form-control.input-sm(
           type="text", value=settings['core.contact_email_address'] || '',
           placeholder=`Default: ${defaults['core.contact_email_address'] || 'none'}`,
-          title="The contact email address for users to obtain support with this instance.")
+          title="供用户联系的电子邮箱地址")
     .form-group
       label(for="g-core-banner-color") Banner Color
       #g-core-banner-color-container
         input#g-core-banner-color.form-control.input-sm(
             type="color", value=settings['core.banner_color'] || defaults['core.banner_color'],
-            title="The banner color of the application.")
+            title="应用程序的品牌颜色")
         button#g-core-banner-default-color.form-control.input-sm(
-            type="button", title="Default color") default
+            type="button", title="默认颜色") default
   .form-group
     label(for="g-core-privacy-notice") Privacy Notice Link
     input#g-core-privacy-notice.form-control.input-sm(
         type="text", value=settings['core.privacy_notice'] || '',
         placeholder=`Default: ${defaults['core.privacy_notice'] || 'none'}`,
-        title="The privacy notice link.")
+        title="隐私声明链接")
   .form-group
     label(for="g-core-cookie-lifetime") Cookie duration (days)
     input#g-core-cookie-lifetime.form-control.input-sm(
         type="text", value=settings['core.cookie_lifetime'] || '',
         placeholder=`Default: ${defaults['core.cookie_lifetime'] || 'none'}`,
-        title="How long users will stay logged in.")
+        title="用户保持登录的时间")
   .g-settings-form-container
     h4 Administrative Policy
     .form-group
@@ -257,5 +257,5 @@ form.g-settings-form(role="form")
                   title="A comma-separated list of allowed headers.")
   p
   .form-group
-    button.g-submit-settings.btn.btn-default.btn-sm #[i.icon-ok]  Save
+    button.g-submit-settings.btn.btn-default.btn-sm #[i.icon-ok]  保存
   #g-settings-error-message.g-validation-failed-message

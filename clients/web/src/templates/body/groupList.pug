@@ -7,20 +7,20 @@
   if getCurrentUser()
     button.g-group-create-button.btn.btn-sm.btn-default
       i.icon-plus-squared
-      |  Create Group
+      |  创建组Create Group
 
 each group in groups
   .g-group-list-entry.g-top-level-list-entry(public=(group.get('public') ? "true" : "false"))
     .g-group-right-column
       .g-group-created
         i.icon-clock
-        | Created on
+        | 创建于Created on
         span.g-group-created-date  #{formatDate(group.get('created'), DATE_DAY)}
     .g-list-public-status-icon
       if group.get('public')
-        i.icon-globe(title="Public group")
+        i.icon-globe(title="公开组Public group")
       else
-        i.icon-lock(title="Private group")
+        i.icon-lock(title="私有组Private group")
     .g-top-level-list-title-container
       .g-group-title
         a.g-group-link(g-group-cid=group.cid)

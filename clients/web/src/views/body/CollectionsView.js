@@ -44,7 +44,7 @@ var CollectionsView = View.extend({
         });
 
         this.searchWidget = new SearchFieldWidget({
-            placeholder: 'Search collections...',
+            placeholder: '请输入检索内容',
             types: ['collection'],
             parentView: this
         }).on('g:resultClicked', this._gotoCollection, this);

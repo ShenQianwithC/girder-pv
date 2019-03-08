@@ -50,7 +50,7 @@ class Collection(AccessControlledModel):
 
         if not doc['name']:
             raise ValidationException(
-                'Collection name must not be empty.', 'name')
+                '病例图片库名不能为空.', 'name')
 
         # Ensure unique name for the collection
         q = {
@@ -60,8 +60,7 @@ class Collection(AccessControlledModel):
             q['_id'] = {'$ne': doc['_id']}
         duplicate = self.findOne(q, fields=['_id'])
         if duplicate is not None:
-            raise ValidationException('A collection with that name already '
-                                      'exists.', 'name')
+            raise ValidationException('该病例图片库名已存在.', 'name')
 
         doc['lowerName'] = doc['name'].lower()
 
@@ -173,6 +172,7 @@ class Collection(AccessControlledModel):
             assetstore, otherwise return file document.
         :type data: bool
         """
+        print("(#####) collection.py:fileList()")
         from .folder import Folder
 
         if subpath:

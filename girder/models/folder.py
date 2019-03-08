@@ -71,7 +71,7 @@ class Folder(AccessControlledModel):
         doc['description'] = doc['description'].strip()
 
         if not doc['name']:
-            raise ValidationException('Folder name must not be empty.', 'name')
+            raise ValidationException('文件夹名不能为空.', 'name')
 
         if not doc['parentCollection'] in ('folder', 'user', 'collection'):
             # Internal error; this shouldn't happen
@@ -111,10 +111,8 @@ class Folder(AccessControlledModel):
                 break
             if not allowRename:
                 if dupFolder:
-                    raise ValidationException('A folder with that name '
-                                              'already exists here.', 'name')
-                raise ValidationException('An item with that name already '
-                                          'exists here.', 'name')
+                    raise ValidationException('该文件夹已存在.', 'name')
+                raise ValidationException('同名图像已存在.', 'name')
             n += 1
             name = '%s (%d)' % (doc['name'], n)
         return doc

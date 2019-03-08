@@ -225,7 +225,7 @@ class Resource(BaseResource):
         self._validateResourceSet(resources, allowedDeleteTypes)
         total = sum([len(resources[key]) for key in resources])
         with ProgressContext(
-                progress, user=user, title='Deleting resources',
+                progress, user=user, title='删除对象.',
                 message='Calculating size...') as ctx:
             ctx.update(total=total)
             current = 0
@@ -318,7 +318,7 @@ class Resource(BaseResource):
         parent = self._prepareMoveOrCopy(resources, parentType, parentId)
         total = sum([len(resources[key]) for key in resources])
         with ProgressContext(
-                progress, user=user, title='Moving resources',
+                progress, user=user, title='移动对象',
                 message='Calculating requirements...', total=total) as ctx:
             for kind in resources:
                 model = self._getResourceModel(kind, 'move')
@@ -363,7 +363,7 @@ class Resource(BaseResource):
                 folder = model.load(id=id, user=user, level=AccessType.READ, exc=True)
                 total += model.subtreeCount(folder)
         with ProgressContext(
-                progress, user=user, title='Copying resources',
+                progress, user=user, title='拷贝对象',
                 message='Calculating requirements...', total=total) as ctx:
             for kind in resources:
                 model = self._getResourceModel(kind)

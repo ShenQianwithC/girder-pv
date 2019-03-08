@@ -28,6 +28,9 @@ import HierarchyWidgetTemplate from 'girder/templates/widgets/hierarchyWidget.pu
 import 'girder/stylesheets/widgets/hierarchyWidget.styl';
 
 import 'bootstrap/js/dropdown';
+import PaginateWidget from 'girder/views/widgets/PaginateWidget';
+
+import CollectionCollection from 'girder/collections/CollectionCollection';
 
 var pickedResources = null;
 
@@ -114,6 +117,16 @@ var HierarchyWidget = View.extend({
      *                  event as its second.
      */
     initialize: function (settings) {
+
+        this.collection = new CollectionCollection();
+        this.collection.on('g:changed', function () {
+            this.render();
+        }, this).fetch();
+        this.paginateWidget = new PaginateWidget({
+            collection: this.collection,
+            parentView: this
+        });
+
         this.parentModel = settings.parentModel;
         this.upload = settings.upload;
 
@@ -260,7 +273,6 @@ var HierarchyWidget = View.extend({
     render: function () {
         this.folderCount = null;
         this.itemCount = null;
-
         this.$el.html(HierarchyWidgetTemplate({
             type: this.parentModel.resourceName,
             model: this.parentModel,
@@ -307,6 +319,9 @@ var HierarchyWidget = View.extend({
         }
 
         this.fetchAndShowChildCount();
+
+        this.paginateWidget.setElement(this.$('.g-collection-pagination')).render();
+        // console.log('(#####)HierarchyWidget.js:paginateWidget():' + this.paginateWidget)
 
         return this;
     },
@@ -381,7 +396,7 @@ var HierarchyWidget = View.extend({
             }).on('g:saved', function () {
                 events.trigger('g:alert', {
                     icon: 'ok',
-                    text: 'Folder info updated.',
+                    text: '文件夹信息已更新.',
                     type: 'success',
                     timeout: 4000
                 });
@@ -417,10 +432,12 @@ var HierarchyWidget = View.extend({
     deleteFolderDialog: function () {
         var type = this.parentModel.resourceName;
         var params = {
-            text: 'Are you sure you want to delete the ' + type + ' <b>' +
+            // text: '确定删除 ' + type + ' <b>' +
+            text: '确定删除' + ' <b>' +
                   this.parentModel.escape('name') + '</b>?',
             escapedHtml: true,
-            yesText: 'Delete',
+            yesText: '删除',
+            icon: 'trash',
             confirmCallback: () => {
                 this.parentModel.on('g:deleted', function () {
                     if (type === 'collection') {
@@ -478,12 +495,12 @@ var HierarchyWidget = View.extend({
             const folderCount = formatCount(this.parentModel.get('nFolders'));
             this.$('.g-child-count-container').removeClass('hide');
             this.$('.g-subfolder-count').text(folderCount);
-            const folderTooltip = folderCount === 1 ? `${folderCount} total folder` : `${folderCount} total folders`;
+            const folderTooltip = folderCount === 1 ? `${folderCount} total folder` : `${folderCount} 个文件夹`;
             this.$('.g-subfolder-count-container').attr('title', folderTooltip);
             if (this.parentModel.has('nItems')) {
                 const itemCount = formatCount(this.parentModel.get('nItems'));
                 this.$('.g-item-count').text(itemCount);
-                const itemTooltip = itemCount === 1 ? `${itemCount} total item` : `${itemCount} total items`;
+                const itemTooltip = itemCount === 1 ? `${itemCount} total item` : `${itemCount} 个图像`;
                 this.$('.g-item-count-container').attr('title', itemTooltip);
             }
         };
@@ -591,13 +608,12 @@ var HierarchyWidget = View.extend({
         if (this.itemListView && this.itemListView.checked.length) {
             items = this.itemListView.checked;
         }
-        var desc = this._describeResources({folder: folders, item: items});
+        var desc = this._describeResources({文件夹: folders, 图像: items});
 
         var params = {
-            text: 'Are you sure you want to delete the checked resources (' +
-                  desc + ')?',
-
-            yesText: 'Delete',
+            text: '确定删除选的的对象?',
+            yesText: '删除',
+            icon: 'trash',
             confirmCallback: () => {
                 var resources = this._getCheckedResourceParam();
                 /* Content on DELETE requests is somewhat oddly supported (I
@@ -820,7 +836,7 @@ var HierarchyWidget = View.extend({
         pickedResources.resources = resources;
         this.updateChecked();
         var totalPickDesc = this.getPickedDescription();
-        var desc = totalPickDesc + ' picked.';
+        var desc = '选择' + totalPickDesc + '.';
         if (pickDesc !== totalPickDesc) {
             desc = pickDesc + ' added to picked resources.  Now ' + desc;
         }
@@ -893,7 +909,7 @@ var HierarchyWidget = View.extend({
         if (event) {
             events.trigger('g:alert', {
                 icon: 'ok',
-                text: 'Cleared picked resources',
+                text: '取消移动或拷贝对象.',
                 type: 'info',
                 timeout: 4000
             });

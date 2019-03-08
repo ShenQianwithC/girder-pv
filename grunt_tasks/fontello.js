@@ -46,7 +46,8 @@ module.exports = function (grunt) {
         grunt.config.merge({
             shell: {
                 fontello: {
-                    command: `curl "${srcUrl}" -o "${archivePath}"`
+                    // command: `curl "${srcUrl}" -o "${archivePath}"`
+                    command: ``
                 }
             }
         });

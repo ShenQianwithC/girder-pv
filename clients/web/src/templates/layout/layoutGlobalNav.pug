@@ -1,7 +1,13 @@
 .g-global-nav-main
-  ul.g-global-nav
+   ul.g-global-nav
     each navItem in navItems
       li.g-global-nav-li
-        a.g-nav-link(g-target=navItem.target, g-name=navItem.name, href=`#${navItem.target}`)
-          i(class=navItem.icon)
+      if navItem.target === 'collections'
+        button.button(g-target=navItem.target, g-name=navItem.name, type='button',  onclick="location.href='https://localhost:8080/#collections'")
+          span= navItem.name
+      else if navItem.target === 'admin'
+        button.button(g-target=navItem.target, g-name=navItem.name, type='button',  onclick="location.href='https://localhost:8080/#admin'")
+          span= navItem.name
+      else
+        button.button(g-target=navItem.target, g-name=navItem.name, type='button',  onclick="location.href='https://localhost:8080/#users'")
           span= navItem.name

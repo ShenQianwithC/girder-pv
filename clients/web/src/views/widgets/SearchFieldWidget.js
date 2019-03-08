@@ -346,18 +346,18 @@ var SearchFieldWidget = View.extend({
 SearchFieldWidget.addMode(
     'text',
     ['item', 'folder', 'group', 'collection', 'user'],
-    'Full text search',
-    `By default, search results will be returned if they contain
-     any of the terms of the search. If you wish to search for documents
-     containing all of the terms, place them in quotes.
-     Examples:`
+    '任意匹配', `默认检索：返回包含检索关键字对象`
+//     `By default, search results will be returned if they contain
+//      any of the terms of the search. If you wish to search for documents
+//      containing all of the terms, place them in quotes.
+//      Examples:`
 );
 SearchFieldWidget.addMode(
     'prefix',
     ['item', 'folder', 'group', 'collection', 'user'],
-    'Search by prefix',
-    `You are searching by prefix.
-     Start typing the first letters of whatever you are searching for.`
+    '前方一致', `进行前方一致检索`
+//     `You are searching by prefix.
+//      Start typing the first letters of whatever you are searching for.`
 );
 
 export default SearchFieldWidget;

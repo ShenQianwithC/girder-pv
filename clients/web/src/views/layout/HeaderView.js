@@ -14,14 +14,20 @@ import 'girder/stylesheets/layout/header.styl';
  */
 var LayoutHeaderView = View.extend({
     events: {
-        'click .g-app-title': function () {
+        'click .g-return-link': function () {
+               // 点击“返回首頁”文字触发返回首页事件
             router.navigate('', {trigger: true});
         }
+//         'click .g-app-title': function () {
+//                alert('HeaderView.js');
+//                // 点击标题文字触发返回首页事件
+//             router.navigate('', {trigger: true});
+//         }
     },
 
     initialize: function (settings) {
-        this.brandName = settings.brandName || 'Girder';
-        this.bannerColor = settings.bannerColor || '#3F3B3B';
+        this.brandName = settings.brandName || 'PathoVision';
+        this.bannerColor = settings.bannerColor || '#8576ed';
 
         this.userView = new LayoutHeaderUserView({
             parentView: this,
@@ -55,7 +61,8 @@ var LayoutHeaderView = View.extend({
             // We will lose the hover color by setting this, so only do that if necessary
             this.userView.$('.g-user-text a').css('color', textColor);
         }
-        this.searchWidget.setElement(this.$('.g-quick-search-container')).render();
+           // 显示检索框
+//         this.searchWidget.setElement(this.$('.g-quick-search-container')).render();
 
         return this;
     },

@@ -4,25 +4,25 @@
       .modal-header
         button.close(data-dismiss="modal", aria-hidden="true", type="button") &times;
         h4.modal-title
-          | Edit assetstore
+          | 编辑资源库
       .modal-body
         .g-assetstore-form-fields
           .form-group
-            label.control-label(for="g-edit-name") Assetstore Name
+            label.control-label(for="g-edit-name") 资源库名称
             input#g-edit-name.input-sm.form-control(type="text", placeholder="Name")
           if assetstore.get('type') === types.FILESYSTEM
             .form-group
-              label.control-label(for="g-edit-fs-root") Root directory
+              label.control-label(for="g-edit-fs-root") 根目录
               input#g-edit-fs-root.input-sm.form-control(type="text", placeholder="Root directory")
             .form-group
               label.control-label(for="g-edit-fs-perms") File creation permissions (octal)
               input#g-edit-fs-perms.input-sm.form-control(type="text", placeholder="600")
           if assetstore.get('type') === types.GRIDFS
             .form-group
-              label.control-label(for="g-edit-gridfs-db") Database name
+              label.control-label(for="g-edit-gridfs-db") 数据库名称
               input#g-edit-gridfs-db.input-sm.form-control(type="text", placeholder="Database name")
             .form-group
-              label.control-label(for="g-edit-gridfs-mongohost") Mongo Host URI
+              label.control-label(for="g-edit-gridfs-mongohost") Mongo 主机 URI
               input#g-edit-gridfs-mongohost.input-sm.form-control(
                   type="text", placeholder="Mongo host uri (defaults to the main Girder database)",
                   title="The URI is of the form mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]")
@@ -48,7 +48,7 @@
               input#g-edit-s3-secret.input-sm.form-control(type="text", placeholder="Secret access key")
             .form-group
               label.control-label(for="g-edit-s3-service") Service
-              input#g-edit-s3-service.input-sm.form-control(type="text", placeholder="Service", title="The service if different from s3.amazonaws.com, such as storage.googleapis.com.")
+              input#g-edit-s3-service.input-sm.form-control(type="text", placeholder="Service")
             .form-group
               label.control-label(for="g-edit-s3-region") Region
               input#g-edit-s3-region.input-sm.form-control(type="text", placeholder="Region")
@@ -66,13 +66,14 @@
             | #[b Warning:] This assetstore contains files.  If you edit where the assetstore is located or how it is reached, those files may become unreachable.
         .g-validation-failed-message
       .modal-footer
-        a.btn.btn-small.btn-default(data-dismiss="modal") Cancel
+        a.btn.btn-small.btn-default(data-dismiss="modal") 取消
+          i.icon-cancel-circled
         if !assetstore.get('hasFiles')
           button.g-save-assetstore.btn.btn-small.btn-primary(type="submit")
-            i.icon-edit
-            | Save
+            i.icon-floppy
+            | 保存
         else
           button.g-save-assetstore.btn.btn-small.btn-primary.btn-danger(type="submit")
-            i.icon-edit
-            | Save
+            i.icon-floppy
+            | 保存
             i.icon-attention
