@@ -1,10 +1,10 @@
 /* 首页欢迎图像 */
 .pv-frontpage-welcome-image {
-  max-width: 60px;
-  max-height: 60px;
+  max-width: 300px;
+  max-height: 300px;
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 30%;
   -webkit-transform: translate(-50%, -50%);
   -moz-transform: translate(-50%, -50%);
   -o-transform: translate(-50%, -50%);
