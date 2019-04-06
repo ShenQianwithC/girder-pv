@@ -46,3 +46,8 @@ if folderCount || itemCount
       a.g-delete-checked
         i.icon-trash
         | 删除选择的对象
+if itemCount != 0 && folderCount === 0 && pickedCount === 0
+  li
+    a.g-ai-annotation
+      i.icon-upload
+      | 执行AI病理诊断

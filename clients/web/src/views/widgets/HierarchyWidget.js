@@ -92,6 +92,7 @@ var HierarchyWidget = View.extend({
         'click a.g-copy-picked': 'copyPickedResources',
         'click a.g-clear-picked': 'clearPickedResources',
         'click a.g-delete-checked': 'deleteCheckedDialog',
+        'click a.g-ai-annotation': 'excuteAI',
         'click .g-list-checkbox': 'checkboxListener',
         'change .g-select-all': function (e) {
             this.folderListView.checkAll(e.currentTarget.checked);
@@ -202,6 +203,44 @@ var HierarchyWidget = View.extend({
         events.on('g:login', () => {
             this.constructor.resetPickedResources();
         }, this);
+    },
+
+    excuteAI: function () {
+      var folders = this.folderListView.checked;
+      var items;
+      if (this.itemListView && this.itemListView.checked.length) {
+          items = this.itemListView.checked;
+      }
+      var desc = this._describeResources({文件夹: folders, 图像: items});
+
+      var params = {
+          text: '确定执行AI诊断?',
+          yesText: '开始',
+          icon: 'book',
+          confirmCallback: () => {
+              var resources = this._getCheckedResourceParam();
+              /* Content on DELETE requests is somewhat oddly supported (I
+               * can't get it to work under jasmine/phantom), so override the
+               * method. */
+              restRequest({
+                  url: 'resource/slide',
+                  method: 'POST',
+                  data: {resources: resources, progress: true}
+                  // headers: {'X-HTTP-Method-Override': 'POST'}
+              }).done(() => {
+                  // alert('excuteAI done');
+                  // if (items && items.length && this.parentModel.has('nItems')) {
+                  //     this.parentModel.increment('nItems', -items.length);
+                  // }
+                  // if (folders.length && this.parentModel.has('nFolders')) {
+                  //     this.parentModel.increment('nFolders', -folders.length);
+                  // }
+                  //
+                  // this.setCurrentModel(this.parentModel, {setRoute: false});
+              });
+          }
+      };
+      confirm(params);
     },
 
     /**

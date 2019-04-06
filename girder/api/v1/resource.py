@@ -41,6 +41,7 @@ class Resource(BaseResource):
     """
     def __init__(self):
         super(Resource, self).__init__()
+        print('(#####)girder/girder/api/vi/rescource.py-__init__()')
         self.resourceName = 'resource'
         self.route('GET', ('search',), self.search)
         self.route('GET', ('lookup',), self.lookup)
@@ -52,6 +53,7 @@ class Resource(BaseResource):
         self.route('PUT', ('move',), self.moveResources)
         self.route('POST', ('copy',), self.copyResources)
         self.route('DELETE', (), self.delete)
+        self.route('POST',  ('slide',), self.excuteAI)
 
     @access.public
     @autoDescribeRoute(
@@ -181,6 +183,7 @@ class Resource(BaseResource):
         file containing the listed resource's contents, filtered by
         permissions.
         """
+        print('(#####) girder/girder/api/v1/resource.py-download')
         user = self.getCurrentUser()
         self._validateResourceSet(resources)
         # Check that all the resources are valid, so we don't download the zip
@@ -314,6 +317,7 @@ class Resource(BaseResource):
         .errorResponse('ID was invalid.')
     )
     def moveResources(self, resources, parentType, parentId, progress):
+        print('(#####) girder/girder/api/v1/resource.py-moveResources')
         user = self.getCurrentUser()
         parent = self._prepareMoveOrCopy(resources, parentType, parentId)
         total = sum([len(resources[key]) for key in resources])
@@ -354,6 +358,7 @@ class Resource(BaseResource):
         .errorResponse('ID was invalid.')
     )
     def copyResources(self, resources, parentType, parentId, progress):
+        print('(#####) girder/girder/api/v1/resource.py-copyResources')
         user = self.getCurrentUser()
         parent = self._prepareMoveOrCopy(resources, parentType, parentId)
         total = len(resources.get('item', []))
@@ -376,3 +381,169 @@ class Resource(BaseResource):
                     elif kind == 'folder':
                         model.copyFolder(
                             doc, parent=parent, parentType=parentType, creator=user, progress=ctx)
+
+    @access.user(scope=TokenScope.DATA_OWN)
+    @autoDescribeRoute(
+        Description('Delete a set of items, folders, or other resources.')
+        .jsonParam('resources', 'A JSON-encoded set of resources to delete. Each '
+                   'type is a list of ids.  For example: {"item": [(item id 1), '
+                   '(item id2)], "folder": [(folder id 1)]}.', requireObject=True)
+        .param('progress', 'Whether to record progress on this task.',
+               default=False, required=False, dataType='boolean')
+        .errorResponse('Unsupported or unknown resource type.')
+        .errorResponse('Invalid resources format.')
+        .errorResponse('No resources specified.')
+        .errorResponse('Resource not found.')
+        .errorResponse('Admin access was denied for a resource.', 403)
+    )
+    
+    #####################################################
+    ################# PV AI diagnosis START #############
+    #####################################################
+    def excuteAI(self, resources, progress):
+        import pymongo
+        import ai_pathology as ai_pathology
+        from bson.objectid import ObjectId
+        import xml.dom.minidom
+        user = self.getCurrentUser()
+        print('(#####) girder/girder/api/v1/resource.py-excuteAI:user='+ str(user))
+        print('(#####) girder/girder/api/v1/resource.py-excuteAI:user[_id]='+ str(user["_id"]))
+        mongoClient = pymongo.MongoClient('mongodb://localhost:27017/')
+        db_girder = mongoClient['girder']
+        coll_file = db_girder["file"]
+        total = sum([len(resources[key]) for key in resources])
+        with ProgressContext(progress, user=user, 
+                             title='AI病理诊断中...', 
+                             message='AI病理诊断中...') as ctx:
+            ctx.update(total=total) # total is the granularity of the progress
+        for kind in resources:
+            for id in resources[kind]:
+                doc_file = coll_file.find_one({"itemId":ObjectId(id)})
+                filePath= "/opt/histomicstk/".join(str(doc_file["path"]))
+                anoFile = ai_pathology.ai_excuataion(filePath)
+                svsFileName = doc_file["name"]
+                print('(#####) girder/girder/api/v1/resource.py-excuteAI:id='+ (id))
+                print('(#####) girder/girder/api/v1/resource.py-excuteAI:doc_file='+ str(doc_file))
+                print('(#####) girder/girder/api/v1/resource.py-excuteAI:anoFile='+ str(anoFile))
+                print('(#####) girder/girder/api/v1/resource.py-excuteAI:svsFileName='+ str(svsFileName))
+                
+                #####################################################
+                ################# PV AI diagnosis START #############
+                #####################################################
+                coll_annotation = db_girder["annotation"]
+            
+                annotation_id = ObjectId()
+                annotation={
+                            "_id" : annotation_id,
+                            ### "itemId" need to be update
+                            "itemId" : ObjectId(id),
+                            #################################################
+                            # "updated" : ISODate("2018-12-13T08:59:09.307Z"),
+                            "groups" : [],
+                            # "created" : ISODate("2018-12-13T08:56:23.083Z"),
+                            "_version" : 1,
+                            "annotation" : {
+                                "name" : "AI诊断结果"
+                            },
+                            "access" : {
+                                "users" : [
+                                    {
+                                        "flags" : [],
+                                        "id" : user["_id"],
+                                        "level" : 2
+                                    }
+                                ],
+                                "groups" : []
+                            },
+                            "creatorId" : user["_id"],
+                            "public" : False,
+                            "updatedId" : user["_id"]
+                        }
+                result = coll_annotation.insert_one(annotation)
+            
+                #get elements
+                dom = xml.dom.minidom.parse("/home/ken/Documents/kfbSlides/old/AA01D201800252.kfb.Ano")
+                root = dom.documentElement
+            
+                #####################################################
+                ################ Get  pvAno Elements ################
+                #####################################################
+                annotations = root.getElementsByTagName('Annotations')[0]
+                # print('1' + str(annotations))
+                regions = annotations.getElementsByTagName('Regions')[0]
+                # print('2' + str(regions))
+                region = regions.getElementsByTagName('Region')
+                # print('3' + str(region))
+            
+                for node_r in region:
+                    print('3' + str(node_r.getAttribute('Detail')))
+                    # print('4' + node.getAttribute('FigureType'))
+                    vertices = node_r.getElementsByTagName('Vertices')[0]
+                    vertice = node_r.getElementsByTagName('Vertice')
+                    # print('5' + str(vertice))
+                    points = []
+                    for node_v in vertice:
+                        X = node_v.getAttribute('X')
+                        Y = node_v.getAttribute('Y')
+                        # print('6: ' + X)
+                        point = [float(X)*40, float(Y)*40, 0]
+                        # print('7: ' + str(point))
+                        points.append(point)
+            
+                    #####################################################
+                    ############## Insert Annotationelement #############
+                    #####################################################
+                    coll_annotationelement = db_girder["annotationelement"]
+                    annotationelement= {
+                                        "_id" : ObjectId(),
+                                        # "created" : ISODate("2018-12-13T08:59:09.339Z"),
+                                        "annotationId" : annotation_id,
+                                        "_version" : 1,
+                                        "element" : {
+                                            "closed" : False,
+                                            "points" : points,
+                                            "fillColor" : "rgba(0,0,0,0)",
+                                            "lineColor" : "rgb(0,0,0)",
+                                            "lineWidth" : 2,
+                                            "type" : "polyline",
+                                            "id" : str(ObjectId())
+                                        },
+                                        # "bbox" : {
+                                        #     "highy" : 62041.6302682467,
+                                        #     "highx" : 35963.8099634868,
+                                        #     "highz" : 0,
+                                        #     "details" : 60,
+                                        #     "size" : 47311.8713726143,
+                                        #     "lowz" : 0,
+                                        #     "lowx" : 4516.38527529891,
+                                        #     "lowy" : 26693.7498047797
+                                        # }
+                                    }
+                    result = coll_annotationelement.insert_one(annotationelement)
+        
+        ctx.update(increment=1) # see notification model for other options
+        
+#         user = self.getCurrentUser()
+#         self._validateResourceSet(resources, allowedDeleteTypes)
+#         total = sum([len(resources[key]) for key in resources])
+#         with ProgressContext(
+#                 progress, user=user, title='AI诊断.',
+#                 message='Calculating size...') as ctx:
+#             ctx.update(total=total)
+#             current = 0
+#             for kind in resources:
+#                 model = self._getResourceModel(kind, 'remove')
+#                 for id in resources[kind]:
+#                     doc = model.load(id=id, user=user, level=AccessType.ADMIN, exc=True)
+# 
+#                     # Don't do a subtree count if we weren't asked for progress
+#                     if progress:
+#                         subtotal = model.subtreeCount(doc)
+#                         if subtotal != 1:
+#                             total += subtotal - 1
+#                             ctx.update(total=total)
+# #                     model.remove(doc, progress=ctx)
+#                     if progress:
+#                         current += subtotal
+#                         if ctx.progress['data']['current'] != current:
+#                             ctx.update(current=current, message='Deleted ' + kind)
