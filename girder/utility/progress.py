@@ -67,12 +67,12 @@ class ProgressContext(object):
 
         if excType is None and excValue is None:
             state = ProgressState.SUCCESS
-            message = 'Done'
+            message = '完成'
         else:
             state = ProgressState.ERROR
-            message = 'Error'
+            message = '错误'
             if isinstance(excValue, (ValidationException, RestException)):
-                message = 'Error: '+excValue.message
+                message = '错误: '+excValue.message
 
         Notification().updateProgress(
             self.progress, state=state, message=message,
