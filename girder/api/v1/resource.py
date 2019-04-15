@@ -412,115 +412,116 @@ class Resource(BaseResource):
         db_girder = mongoClient['girder']
         coll_file = db_girder["file"]
         total = sum([len(resources[key]) for key in resources])
+        print('(#####) girder/girder/api/v1/resource.py-excuteAI:total='+ str(total))
         with ProgressContext(progress, user=user, 
                              title='AI病理诊断中...', 
                              message='AI病理诊断中...') as ctx:
             ctx.update(total=total) # total is the granularity of the progress
-        for kind in resources:
-            for id in resources[kind]:
-                doc_file = coll_file.find_one({"itemId":ObjectId(id)})
-                filePath= "/opt/histomicstk/".join(str(doc_file["path"]))
-                anoFile = ai_pathology.ai_excuataion(filePath)
-                svsFileName = doc_file["name"]
-                print('(#####) girder/girder/api/v1/resource.py-excuteAI:id='+ (id))
-                print('(#####) girder/girder/api/v1/resource.py-excuteAI:doc_file='+ str(doc_file))
-                print('(#####) girder/girder/api/v1/resource.py-excuteAI:anoFile='+ str(anoFile))
-                print('(#####) girder/girder/api/v1/resource.py-excuteAI:svsFileName='+ str(svsFileName))
+            current = 0
+            for kind in resources:
+                for id in resources[kind]:
+                    doc_file = coll_file.find_one({"itemId":ObjectId(id)})
+                    filePath= "/opt/histomicstk/".join(str(doc_file["path"]))
+                    anoFile = ai_pathology.ai_excuataion(filePath)
+                    svsFileName = doc_file["name"]
+                    print('(#####) girder/girder/api/v1/resource.py-excuteAI:id='+ (id))
+                    print('(#####) girder/girder/api/v1/resource.py-excuteAI:doc_file='+ str(doc_file))
+                    print('(#####) girder/girder/api/v1/resource.py-excuteAI:anoFile='+ str(anoFile))
+                    print('(#####) girder/girder/api/v1/resource.py-excuteAI:svsFileName='+ str(svsFileName))
+                    
+                    #####################################################
+                    ################# PV AI diagnosis START #############
+                    #####################################################
+                    coll_annotation = db_girder["annotation"]
                 
-                #####################################################
-                ################# PV AI diagnosis START #############
-                #####################################################
-                coll_annotation = db_girder["annotation"]
-            
-                annotation_id = ObjectId()
-                annotation={
-                            "_id" : annotation_id,
-                            ### "itemId" need to be update
-                            "itemId" : ObjectId(id),
-                            #################################################
-                            # "updated" : ISODate("2018-12-13T08:59:09.307Z"),
-                            "groups" : [],
-                            # "created" : ISODate("2018-12-13T08:56:23.083Z"),
-                            "_version" : 1,
-                            "annotation" : {
-                                "name" : "AI诊断结果"
-                            },
-                            "access" : {
-                                "users" : [
-                                    {
-                                        "flags" : [],
-                                        "id" : user["_id"],
-                                        "level" : 2
-                                    }
-                                ],
-                                "groups" : []
-                            },
-                            "creatorId" : user["_id"],
-                            "public" : False,
-                            "updatedId" : user["_id"]
-                        }
-                result = coll_annotation.insert_one(annotation)
-            
-                #get elements
-                dom = xml.dom.minidom.parse("/home/ken/Documents/kfbSlides/old/AA01D201800252.kfb.Ano")
-                root = dom.documentElement
-            
-                #####################################################
-                ################ Get  pvAno Elements ################
-                #####################################################
-                annotations = root.getElementsByTagName('Annotations')[0]
-                # print('1' + str(annotations))
-                regions = annotations.getElementsByTagName('Regions')[0]
-                # print('2' + str(regions))
-                region = regions.getElementsByTagName('Region')
-                # print('3' + str(region))
-            
-                for node_r in region:
-                    print('3' + str(node_r.getAttribute('Detail')))
-                    # print('4' + node.getAttribute('FigureType'))
-                    vertices = node_r.getElementsByTagName('Vertices')[0]
-                    vertice = node_r.getElementsByTagName('Vertice')
-                    # print('5' + str(vertice))
-                    points = []
-                    for node_v in vertice:
-                        X = node_v.getAttribute('X')
-                        Y = node_v.getAttribute('Y')
-                        # print('6: ' + X)
-                        point = [float(X)*40, float(Y)*40, 0]
-                        # print('7: ' + str(point))
-                        points.append(point)
-            
+                    annotation_id = ObjectId()
+                    annotation={
+                                "_id" : annotation_id,
+                                ### "itemId" need to be update
+                                "itemId" : ObjectId(id),
+                                #################################################
+                                # "updated" : ISODate("2018-12-13T08:59:09.307Z"),
+                                "groups" : [],
+                                # "created" : ISODate("2018-12-13T08:56:23.083Z"),
+                                "_version" : 1,
+                                "annotation" : {
+                                    "name" : "AI诊断结果"
+                                },
+                                "access" : {
+                                    "users" : [
+                                        {
+                                            "flags" : [],
+                                            "id" : user["_id"],
+                                            "level" : 2
+                                        }
+                                    ],
+                                    "groups" : []
+                                },
+                                "creatorId" : user["_id"],
+                                "public" : False,
+                                "updatedId" : user["_id"]
+                            }
+                    result = coll_annotation.insert_one(annotation)
+                
+                    #get elements
+                    dom = xml.dom.minidom.parse("/home/ken/Documents/kfbSlides/old/AA01D201800252.kfb.Ano")
+                    root = dom.documentElement
+                
                     #####################################################
-                    ############## Insert Annotationelement #############
+                    ################ Get  pvAno Elements ################
                     #####################################################
-                    coll_annotationelement = db_girder["annotationelement"]
-                    annotationelement= {
-                                        "_id" : ObjectId(),
-                                        # "created" : ISODate("2018-12-13T08:59:09.339Z"),
-                                        "annotationId" : annotation_id,
-                                        "_version" : 1,
-                                        "element" : {
-                                            "closed" : False,
-                                            "points" : points,
-                                            "fillColor" : "rgba(0,0,0,0)",
-                                            "lineColor" : "rgb(0,0,0)",
-                                            "lineWidth" : 2,
-                                            "type" : "polyline",
-                                            "id" : str(ObjectId())
-                                        },
-                                        # "bbox" : {
-                                        #     "highy" : 62041.6302682467,
-                                        #     "highx" : 35963.8099634868,
-                                        #     "highz" : 0,
-                                        #     "details" : 60,
-                                        #     "size" : 47311.8713726143,
-                                        #     "lowz" : 0,
-                                        #     "lowx" : 4516.38527529891,
-                                        #     "lowy" : 26693.7498047797
-                                        # }
-                                    }
-                    result = coll_annotationelement.insert_one(annotationelement)
-        
+                    annotations = root.getElementsByTagName('Annotations')[0]
+                    # print('1' + str(annotations))
+                    regions = annotations.getElementsByTagName('Regions')[0]
+                    # print('2' + str(regions))
+                    region = regions.getElementsByTagName('Region')
+                    # print('3' + str(region))
+                
+                    for node_r in region:
+                        print('3' + str(node_r.getAttribute('Detail')))
+                        # print('4' + node.getAttribute('FigureType'))
+                        vertices = node_r.getElementsByTagName('Vertices')[0]
+                        vertice = node_r.getElementsByTagName('Vertice')
+                        # print('5' + str(vertice))
+                        points = []
+                        for node_v in vertice:
+                            X = node_v.getAttribute('X')
+                            Y = node_v.getAttribute('Y')
+                            # print('6: ' + X)
+                            point = [float(X)*40, float(Y)*40, 0]
+                            # print('7: ' + str(point))
+                            points.append(point)
+                
+                        #####################################################
+                        ############## Insert Annotationelement #############
+                        #####################################################
+                        coll_annotationelement = db_girder["annotationelement"]
+                        annotationelement= {
+                                            "_id" : ObjectId(),
+                                            # "created" : ISODate("2018-12-13T08:59:09.339Z"),
+                                            "annotationId" : annotation_id,
+                                            "_version" : 1,
+                                            "element" : {
+                                                "closed" : False,
+                                                "points" : points,
+                                                "fillColor" : "rgba(0,0,0,0)",
+                                                "lineColor" : "rgb(0,0,0)",
+                                                "lineWidth" : 2,
+                                                "type" : "polyline",
+                                                "id" : str(ObjectId())
+                                            },
+                                            # "bbox" : {
+                                            #     "highy" : 62041.6302682467,
+                                            #     "highx" : 35963.8099634868,
+                                            #     "highz" : 0,
+                                            #     "details" : 60,
+                                            #     "size" : 47311.8713726143,
+                                            #     "lowz" : 0,
+                                            #     "lowx" : 4516.38527529891,
+                                            #     "lowy" : 26693.7498047797
+                                            # }
+                                        }
+                        result = coll_annotationelement.insert_one(annotationelement)
         ctx.update(increment=1) # see notification model for other options
         
 #         user = self.getCurrentUser()
