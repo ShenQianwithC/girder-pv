@@ -3,11 +3,11 @@
     each navItem in navItems
       li.g-global-nav-li
       if navItem.target === 'collections'
-        button.button(g-target=navItem.target, g-name=navItem.name, type='button',  onclick="location.href='http://localhost:8009/#collections'")
+        a.button.g-nav-link(g-target=navItem.target, g-name=navItem.name, href=`#${navItem.target}`)
           span= navItem.name
       else if navItem.target === 'admin'
-        button.button(g-target=navItem.target, g-name=navItem.name, type='button',  onclick="location.href='http://localhost:8009/#admin'")
+        a.button.g-nav-link(g-target=navItem.target, g-name=navItem.name, href=`#${navItem.target}`)
           span= navItem.name
       else
-        button.button(g-target=navItem.target, g-name=navItem.name, type='button',  onclick="location.href='http://localhost:8009/#users'")
+        a.button.g-nav-link(g-target=navItem.target, g-name=navItem.name, href=`#${navItem.target}`)
           span= navItem.name
