@@ -396,13 +396,12 @@ class Resource(BaseResource):
         .errorResponse('Resource not found.')
         .errorResponse('Admin access was denied for a resource.', 403)
     )
-    
+
     #####################################################
     ################# PV AI diagnosis START #############
     #####################################################
     def excuteAI(self, resources, progress):
         import pymongo
-        import ai_pathology as ai_pathology
         from bson.objectid import ObjectId
         import xml.dom.minidom
         user = self.getCurrentUser()
@@ -413,27 +412,60 @@ class Resource(BaseResource):
         coll_file = db_girder["file"]
         total = sum([len(resources[key]) for key in resources])
         print('(#####) girder/girder/api/v1/resource.py-excuteAI:total='+ str(total))
-        with ProgressContext(progress, user=user, 
-                             title='AI病理诊断中...', 
+        with ProgressContext(progress, user=user,
+                             title='AI病理诊断中...',
                              message='AI病理诊断中...') as ctx:
             ctx.update(total=total) # total is the granularity of the progress
             current = 0
+            print('(#####) girder/girder/api/v1/resource.py-excuteAI:resources = '+ str(resources))
             for kind in resources:
+                print('(#####) girder/girder/api/v1/resource.py-excuteAI:kind = '+ str(kind))
                 for id in resources[kind]:
+                    print('(#####) girder/girder/api/v1/resource.py-excuteAI:id = '+ str(id))
                     doc_file = coll_file.find_one({"itemId":ObjectId(id)})
-                    filePath= "/opt/histomicstk/".join(str(doc_file["path"]))
-                    anoFile = ai_pathology.ai_excuataion(filePath)
+                    filePath= "/opt/histomicstk/assetstore/" + (str(doc_file["path"]))
                     svsFileName = doc_file["name"]
-                    print('(#####) girder/girder/api/v1/resource.py-excuteAI:id='+ (id))
-                    print('(#####) girder/girder/api/v1/resource.py-excuteAI:doc_file='+ str(doc_file))
-                    print('(#####) girder/girder/api/v1/resource.py-excuteAI:anoFile='+ str(anoFile))
-                    print('(#####) girder/girder/api/v1/resource.py-excuteAI:svsFileName='+ str(svsFileName))
-                    
+                    print('(#####) girder/girder/api/v1/resource.py-excuteAI:filePath = '+ filePath)
+                    print('(#####) girder/girder/api/v1/resource.py-excuteAI:svsFileName = '+ svsFileName)
+                    # filePath = "/home/ken/Pictures/kfbSlides/old/AA01D201800252.svs"
+                    ######################################
+                    anoFileName = svsFileName.replace(".svs", ".kfb.Ano")
+                    anoFile = "/home/ken/Documents/aiWorker/" + anoFileName;
+                    print('(#####) girder/girder/api/v1/resource.py-excuteAI:anoFile 4 = '+ str(anoFile))
+                    # import sys;
+                    # print('(#####) girder/girder/api/v1/resource.py-sys.executable 5 = ' + str(sys.executable))
+                    # sys.path.append("../aiWorker")
+
+                    anacondaPythonExe = "/home/ken/anaconda2a/bin/python"
+                    pyFileName = "/home/ken/Documents/aiWorker/mainSegment.py"
+
+                    cmdThe = " ".join([anacondaPythonExe, pyFileName, filePath, anoFile, "> /tmp/thePyLog.txt 2>&1"])
+                    import os;
+                    print('(#####) girder/girder/api/v1/resource.py-excuteAI:os.system(cmdThe111) ')
+                    print(cmdThe)
+                    os.system(cmdThe)
+                    print('(#####) girder/girder/api/v1/resource.py-excuteAI:os.system(cmdThe333) ')
+
+                    # import mainSegment as mainSegment
+                    # modelName = "/opt/histomicstk/girder/girder/api/v1/unet-10x-5.hdf5"
+                    # print('(#####) girder/girder/api/v1/resource.py-excuteAI:filePath 6 = '+ str(filePath))
+                    # testImgSegResult = mainSegment.segmentSlide(modelName, str(filePath))
+                    # mainSegment.rgbToAno(testImgSegResult, anoFile)
+                    # print('(#####) girder/girder/api/v1/resource.py-excuteAI:filePath 7 = ')
+
+                    ######################################
+                    # anoFile = ai_pathology.ai_excuataion(filePath)
+                    # print('(#####) girder/girder/api/v1/resource.py-excuteAI:id='+ (id))
+                    # print('(#####) girder/girder/api/v1/resource.py-excuteAI:doc_file='+ str(doc_file))
+                    # print('(#####) girder/girder/api/v1/resource.py-excuteAI:anoFile='+ str(anoFile))
+                    # print('(#####) girder/girder/api/v1/resource.py-excuteAI:svsFileName='+ str(svsFileName))
+                    # anoFile = "/home/ken/Documents/aiWorker/jjj.Ano"
+                    # anoFile = "/home/ken/Pictures/kfbSlides/old/AA01D201800194.kfb.Ano"
                     #####################################################
                     ################# PV AI diagnosis START #############
                     #####################################################
                     coll_annotation = db_girder["annotation"]
-                
+
                     annotation_id = ObjectId()
                     annotation={
                                 "_id" : annotation_id,
@@ -462,11 +494,11 @@ class Resource(BaseResource):
                                 "updatedId" : user["_id"]
                             }
                     result = coll_annotation.insert_one(annotation)
-                
+
                     #get elements
-                    dom = xml.dom.minidom.parse("/home/ken/Documents/kfbSlides/old/AA01D201800252.kfb.Ano")
+                    dom = xml.dom.minidom.parse(anoFile)
                     root = dom.documentElement
-                
+
                     #####################################################
                     ################ Get  pvAno Elements ################
                     #####################################################
@@ -476,7 +508,7 @@ class Resource(BaseResource):
                     # print('2' + str(regions))
                     region = regions.getElementsByTagName('Region')
                     # print('3' + str(region))
-                
+
                     for node_r in region:
                         print('3' + str(node_r.getAttribute('Detail')))
                         # print('4' + node.getAttribute('FigureType'))
@@ -491,7 +523,7 @@ class Resource(BaseResource):
                             point = [float(X)*40, float(Y)*40, 0]
                             # print('7: ' + str(point))
                             points.append(point)
-                
+
                         #####################################################
                         ############## Insert Annotationelement #############
                         #####################################################
@@ -505,7 +537,7 @@ class Resource(BaseResource):
                                                 "closed" : False,
                                                 "points" : points,
                                                 "fillColor" : "rgba(0,0,0,0)",
-                                                "lineColor" : "rgb(0,0,0)",
+                                                "lineColor" : "rgb(28,171,77)",
                                                 "lineWidth" : 2,
                                                 "type" : "polyline",
                                                 "id" : str(ObjectId())
@@ -522,8 +554,9 @@ class Resource(BaseResource):
                                             # }
                                         }
                         result = coll_annotationelement.insert_one(annotationelement)
+                    # os.remove(anoFile)
         ctx.update(increment=1) # see notification model for other options
-        
+
 #         user = self.getCurrentUser()
 #         self._validateResourceSet(resources, allowedDeleteTypes)
 #         total = sum([len(resources[key]) for key in resources])
@@ -536,7 +569,7 @@ class Resource(BaseResource):
 #                 model = self._getResourceModel(kind, 'remove')
 #                 for id in resources[kind]:
 #                     doc = model.load(id=id, user=user, level=AccessType.ADMIN, exc=True)
-# 
+#
 #                     # Don't do a subtree count if we weren't asked for progress
 #                     if progress:
 #                         subtotal = model.subtreeCount(doc)
